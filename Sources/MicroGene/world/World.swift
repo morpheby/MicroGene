@@ -23,6 +23,8 @@ public class World: Storing {
 
     public var delegate: WorldDelegate? = nil
 
+    public init() { }
+
     private func compartment(for path: Path) -> StorageCompartment {
         var compartmentIdx: CompartmentIndex = path.innermostCompartment
         var compartmentChain: [CompartmentIndex] = [compartmentIdx]
