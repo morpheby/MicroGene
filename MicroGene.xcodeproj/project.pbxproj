@@ -25,6 +25,8 @@
 		F60413941F90AEF200CC927D /* Executing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60413931F90AEF200CC927D /* Executing.swift */; };
 		F60413971F90AFBA00CC927D /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60413961F90AFBA00CC927D /* Matcher.swift */; };
 		F60413991F90AFF400CC927D /* Matching.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60413981F90AFF400CC927D /* Matching.swift */; };
+		F604139D1F90B1FC00CC927D /* Registry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F604139C1F90B1FC00CC927D /* Registry.swift */; };
+		F604139F1F90B20E00CC927D /* Registering.swift in Sources */ = {isa = PBXBuildFile; fileRef = F604139E1F90B20E00CC927D /* Registering.swift */; };
 		F6A87C541F9059460022D46E /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C501F9056800022D46E /* Storage.swift */; };
 		F6A87C571F905A7B0022D46E /* Storable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C551F905A140022D46E /* Storable.swift */; };
 		F6A87C5A1F905AEA0022D46E /* CompartmentIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C581F905AE80022D46E /* CompartmentIndex.swift */; };
@@ -62,6 +64,8 @@
 		F60413931F90AEF200CC927D /* Executing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Executing.swift; sourceTree = "<group>"; };
 		F60413961F90AFBA00CC927D /* Matcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
 		F60413981F90AFF400CC927D /* Matching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matching.swift; sourceTree = "<group>"; };
+		F604139C1F90B1FC00CC927D /* Registry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Registry.swift; sourceTree = "<group>"; };
+		F604139E1F90B20E00CC927D /* Registering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Registering.swift; sourceTree = "<group>"; };
 		F6A87C501F9056800022D46E /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		F6A87C551F905A140022D46E /* Storable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storable.swift; sourceTree = "<group>"; };
 		F6A87C581F905AE80022D46E /* CompartmentIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompartmentIndex.swift; sourceTree = "<group>"; };
@@ -114,6 +118,15 @@
 				F60413981F90AFF400CC927D /* Matching.swift */,
 			);
 			path = matcher;
+			sourceTree = "<group>";
+		};
+		F604139B1F90B1E400CC927D /* registry */ = {
+			isa = PBXGroup;
+			children = (
+				F604139C1F90B1FC00CC927D /* Registry.swift */,
+				F604139E1F90B20E00CC927D /* Registering.swift */,
+			);
+			path = registry;
 			sourceTree = "<group>";
 		};
 		F6A87C4E1F9056250022D46E /* utils */ = {
@@ -187,6 +200,7 @@
 		OBJ_8 /* MicroGene */ = {
 			isa = PBXGroup;
 			children = (
+				F604139B1F90B1E400CC927D /* registry */,
 				F60413951F90AF9E00CC927D /* matcher */,
 				F60413901F90AE2900CC927D /* executor */,
 				F6A87C4F1F90562B0022D46E /* world */,
@@ -301,8 +315,10 @@
 			files = (
 				F60413921F90AE7300CC927D /* Executor.swift in Sources */,
 				F6A87C601F905FCC0022D46E /* StorableId.swift in Sources */,
+				F604139D1F90B1FC00CC927D /* Registry.swift in Sources */,
 				F6A87C621F90623C0022D46E /* Operators.swift in Sources */,
 				F6A87C571F905A7B0022D46E /* Storable.swift in Sources */,
+				F604139F1F90B20E00CC927D /* Registering.swift in Sources */,
 				F6A87C541F9059460022D46E /* Storage.swift in Sources */,
 				F60413941F90AEF200CC927D /* Executing.swift in Sources */,
 				F60413991F90AFF400CC927D /* Matching.swift in Sources */,
