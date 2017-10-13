@@ -4,4 +4,5 @@ import XCTest
 XCTMain([
     testCase(CompartmentIndexTests.allTests),
     testCase(PathTests.allTests),
+    testCase(StorageTests.allTests),
 ])

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class World: Storing {
+public class Storage: Storing {
 
     private class StorageCompartment {
         let index: CompartmentIndex
@@ -21,7 +21,7 @@ public class World: Storing {
 
     private var rootStorage = StorageCompartment(index: CompartmentIndex.rootCompartment)
 
-    public var delegate: WorldDelegate? = nil
+    public var delegate: StorageDelegate? = nil
 
     public init() { }
 
@@ -60,7 +60,7 @@ public class World: Storing {
 
         compartment.localData[path.storable] = data
 
-        delegate?.didPutValue(world: self, for: path, value: data)
+        delegate?.didPutValue(storage: self, for: path, value: data)
     }
 
     public func take(from path: Path) -> Storable? {
@@ -69,17 +69,17 @@ public class World: Storing {
         let data = compartment.localData.removeValue(forKey: path.storable)
 
         if let d = data {
-            delegate?.didTakeValue(world: self, for: path, value: d)
+            delegate?.didTakeValue(storage: self, for: path, value: d)
         }
 
         return data
     }
 }
 
-public protocol WorldDelegate {
+public protocol StorageDelegate {
     /// Invoked right after adding value to the compartment.
-    func didPutValue(world: World, for path: Path, value: Storable)
-    func didTakeValue(world: World, for path: Path, value: Storable)
+    func didPutValue(storage: Storage, for path: Path, value: Storable)
+    func didTakeValue(storage: Storage, for path: Path, value: Storable)
 }
 
 

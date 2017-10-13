@@ -25,7 +25,7 @@
 		F60413941F90AEF200CC927D /* Executing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60413931F90AEF200CC927D /* Executing.swift */; };
 		F60413971F90AFBA00CC927D /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60413961F90AFBA00CC927D /* Matcher.swift */; };
 		F60413991F90AFF400CC927D /* Matching.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60413981F90AFF400CC927D /* Matching.swift */; };
-		F6A87C541F9059460022D46E /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C501F9056800022D46E /* World.swift */; };
+		F6A87C541F9059460022D46E /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C501F9056800022D46E /* Storage.swift */; };
 		F6A87C571F905A7B0022D46E /* Storable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C551F905A140022D46E /* Storable.swift */; };
 		F6A87C5A1F905AEA0022D46E /* CompartmentIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C581F905AE80022D46E /* CompartmentIndex.swift */; };
 		F6A87C5C1F905B520022D46E /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C5B1F905B520022D46E /* Path.swift */; };
@@ -35,7 +35,7 @@
 		F6A87C641F9091390022D46E /* CompartmentIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C631F9091390022D46E /* CompartmentIndexTests.swift */; };
 		F6A87C681F909BE70022D46E /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C671F909BE70022D46E /* PathTests.swift */; };
 		F6A87C6A1F909C4D0022D46E /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C691F909C4D0022D46E /* Definitions.swift */; };
-		F6A87C6C1F90A4230022D46E /* WorldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C6B1F90A4230022D46E /* WorldTests.swift */; };
+		F6A87C6C1F90A4230022D46E /* StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C6B1F90A4230022D46E /* StorageTests.swift */; };
 		OBJ_21 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_29 /* MicroGene.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "MicroGene::MicroGene::Product" /* MicroGene.framework */; };
 /* End PBXBuildFile section */
@@ -62,7 +62,7 @@
 		F60413931F90AEF200CC927D /* Executing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Executing.swift; sourceTree = "<group>"; };
 		F60413961F90AFBA00CC927D /* Matcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
 		F60413981F90AFF400CC927D /* Matching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matching.swift; sourceTree = "<group>"; };
-		F6A87C501F9056800022D46E /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		F6A87C501F9056800022D46E /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		F6A87C551F905A140022D46E /* Storable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storable.swift; sourceTree = "<group>"; };
 		F6A87C581F905AE80022D46E /* CompartmentIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompartmentIndex.swift; sourceTree = "<group>"; };
 		F6A87C5B1F905B520022D46E /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 		F6A87C651F909B600022D46E /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		F6A87C671F909BE70022D46E /* PathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
 		F6A87C691F909C4D0022D46E /* Definitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
-		F6A87C6B1F90A4230022D46E /* WorldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTests.swift; sourceTree = "<group>"; };
+		F6A87C6B1F90A4230022D46E /* StorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTests.swift; sourceTree = "<group>"; };
 		"MicroGene::MicroGene::Product" /* MicroGene.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MicroGene.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"MicroGene::MicroGeneTests::Product" /* MicroGeneTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = MicroGeneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -126,7 +126,7 @@
 		F6A87C4F1F90562B0022D46E /* world */ = {
 			isa = PBXGroup;
 			children = (
-				F6A87C501F9056800022D46E /* World.swift */,
+				F6A87C501F9056800022D46E /* Storage.swift */,
 				F6A87C551F905A140022D46E /* Storable.swift */,
 				F6A87C581F905AE80022D46E /* CompartmentIndex.swift */,
 				F6A87C5B1F905B520022D46E /* Path.swift */,
@@ -152,7 +152,7 @@
 				F6A87C631F9091390022D46E /* CompartmentIndexTests.swift */,
 				F6A87C671F909BE70022D46E /* PathTests.swift */,
 				F6A87C691F909C4D0022D46E /* Definitions.swift */,
-				F6A87C6B1F90A4230022D46E /* WorldTests.swift */,
+				F6A87C6B1F90A4230022D46E /* StorageTests.swift */,
 			);
 			path = MicroGeneTests;
 			sourceTree = "<group>";
@@ -290,7 +290,7 @@
 			files = (
 				F6A87C6A1F909C4D0022D46E /* Definitions.swift in Sources */,
 				F6A87C681F909BE70022D46E /* PathTests.swift in Sources */,
-				F6A87C6C1F90A4230022D46E /* WorldTests.swift in Sources */,
+				F6A87C6C1F90A4230022D46E /* StorageTests.swift in Sources */,
 				F6A87C641F9091390022D46E /* CompartmentIndexTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,7 +303,7 @@
 				F6A87C601F905FCC0022D46E /* StorableId.swift in Sources */,
 				F6A87C621F90623C0022D46E /* Operators.swift in Sources */,
 				F6A87C571F905A7B0022D46E /* Storable.swift in Sources */,
-				F6A87C541F9059460022D46E /* World.swift in Sources */,
+				F6A87C541F9059460022D46E /* Storage.swift in Sources */,
 				F60413941F90AEF200CC927D /* Executing.swift in Sources */,
 				F60413991F90AFF400CC927D /* Matching.swift in Sources */,
 				F6A87C5E1F905EDB0022D46E /* Storing.swift in Sources */,

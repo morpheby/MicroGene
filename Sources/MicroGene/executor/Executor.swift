@@ -13,12 +13,12 @@ public class Executor: Executing {
 
 }
 
-extension Executor: WorldDelegate {
-    public func didTakeValue(world: World, for path: Path, value: Storable) {
+extension Executor: StorageDelegate {
+    public func didTakeValue(storage: Storage, for path: Path, value: Storable) {
 
     }
 
-    public func didPutValue(world: World, for path: Path, value: Storable) {
+    public func didPutValue(storage: Storage, for path: Path, value: Storable) {
 
     }
 }
