@@ -37,6 +37,8 @@ public struct VariableBinding<Matcher, Variable>: AnyVariableBinding where Match
 public protocol Matchable {
     static var bindings: [AnyVariableBinding] { get }
 
+    init()
+
     func match() -> Bool
 }
 
