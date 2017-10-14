@@ -13,10 +13,6 @@ public protocol AnyVariableBinding {
     func write<T,U>(_ value: U, to holder: inout T) where T: Matchable, U: Storable
 }
 
-extension AnyVariableBinding {
-//    func write<T,U>(_ value: T, to holder: inout U)
-}
-
 public struct VariableBinding<Matcher, Variable>: AnyVariableBinding where Matcher: Matchable, Variable: Storable {
     public var path: PathExpression
 
