@@ -142,7 +142,7 @@
 			path = utils;
 			sourceTree = "<group>";
 		};
-		F6A87C4F1F90562B0022D46E /* world */ = {
+		F6A87C4F1F90562B0022D46E /* storage */ = {
 			isa = PBXGroup;
 			children = (
 				F6A87C501F9056800022D46E /* Storage.swift */,
@@ -153,7 +153,7 @@
 				F6A87C5F1F905FCC0022D46E /* StorableId.swift */,
 				F6A87C611F90623C0022D46E /* Operators.swift */,
 			);
-			path = world;
+			path = storage;
 			sourceTree = "<group>";
 		};
 		OBJ_10 /* Tests */ = {
@@ -209,7 +209,7 @@
 				F604139B1F90B1E400CC927D /* registry */,
 				F60413951F90AF9E00CC927D /* matcher */,
 				F60413901F90AE2900CC927D /* executor */,
-				F6A87C4F1F90562B0022D46E /* world */,
+				F6A87C4F1F90562B0022D46E /* storage */,
 				F6A87C4E1F9056250022D46E /* utils */,
 			);
 			name = MicroGene;
