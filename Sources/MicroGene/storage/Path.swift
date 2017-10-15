@@ -24,3 +24,9 @@ public func / (lhv: CompartmentIndex, rhv: StorableId) -> Path {
     return Path(storable: rhv, compartment: lhv)
 }
 
+extension Path: CustomStringConvertible {
+    public var description: String {
+        return "\(compartment) \(storable)"
+    }
+}
+

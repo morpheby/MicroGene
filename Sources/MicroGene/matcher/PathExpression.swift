@@ -104,3 +104,60 @@ extension PathExpression {
         return .or(lhv, rhv)
     }
 }
+
+extension StorableExpression: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .any:
+            return "*"
+        case let .id(id):
+            return String(describing: id)
+        }
+    }
+}
+
+extension CompartmentIdExpression: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .any:
+            return "*"
+        case let .id(id):
+            return String(describing: id)
+        }
+    }
+}
+
+extension CompartmentPartialExpression: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .node(id, parent):
+            return "\(parent) \(id) /"
+        case let .root(id):
+            return "~/ \(id) /"
+        }
+    }
+}
+
+extension CompartmentExpression: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .node(id, parent):
+            return "\(parent) \(id) /"
+        case let .repeating(partial, parent):
+            return "\(parent) Repeating(\(partial)) /"
+        case let .root(compartment):
+            return "\(compartment)"
+        }
+    }
+}
+
+extension PathExpression: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .or(left, right):
+            return "\(left) || \(right)"
+        case let .single(storable: storableExpr, compartment: compartmentExpr):
+            return "\(compartmentExpr) \(storableExpr)"
+        }
+    }
+}

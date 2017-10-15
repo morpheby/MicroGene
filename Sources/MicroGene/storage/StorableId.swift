@@ -39,3 +39,9 @@ extension StorableId: Hashable {
         return name.hashValue
     }
 }
+
+extension StorableId: CustomStringConvertible {
+    public var description: String {
+        return self.name
+    }
+}

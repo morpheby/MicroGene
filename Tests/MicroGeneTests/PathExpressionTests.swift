@@ -64,7 +64,7 @@ class PathExpressionTests: XCTestCase {
 
             ( /(!.testId1) / .repeating(~/(!.testId2) / .any) / !.stored1,
               [false, false, false, false,
-               true, false, false,
+               true, false, true,
                false, true, false] ),
 
             ( /.repeating(~/.any) / !.stored1,
@@ -73,7 +73,11 @@ class PathExpressionTests: XCTestCase {
                true, true, false] ),
         ]
 
-        
+        for (expr, truthTable) in list {
+            for (path, truth) in zip(paths, truthTable) {
+                XCTAssert(expr.match(path) == truth, "Expression '\(expr)' match '\(path)' should be \(truth)")
+            }
+        }
 
     }
 

@@ -65,3 +65,20 @@ extension CompartmentIndex {
         return .node(id: rhv, parent: lhv)
     }
 }
+
+extension CompartmentId: CustomStringConvertible {
+    public var description: String {
+        return self.rawValue
+    }
+}
+
+extension CompartmentIndex: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .node(id, parent):
+            return "\(parent) \(id) /"
+        case .root:
+            return "/"
+        }
+    }
+}
