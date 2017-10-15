@@ -19,25 +19,23 @@ public class Storage: Storing {
         }
     }
 
-    private var rootStorage = StorageCompartment(index: CompartmentIndex.rootCompartment)
+    private var rootStorage = StorageCompartment(index: .root)
 
     public var delegate: StorageDelegate? = nil
 
     public init() { }
 
     private func compartment(for path: Path) -> StorageCompartment {
-        var compartmentIdx: CompartmentIndex = path.innermostCompartment
+        var compartmentIdx: CompartmentIndex = path.compartment
         var compartmentChain: [CompartmentIndex] = [compartmentIdx]
 
-        while let parent = compartmentIdx.parent {
+        while case let .node(_, parent) = compartmentIdx {
             compartmentChain.append(parent)
             compartmentIdx = parent
         }
 
         var currentCompartment = rootStorage
-        for compartmentIdx in compartmentChain {
-            precondition(currentCompartment === rootStorage || compartmentIdx.parent == currentCompartment.index,
-                         "Invalid path chain supplied or invalid compartment tree in World")
+        for compartmentIdx in compartmentChain.reversed().dropFirst() {
             let nextCompartment: StorageCompartment
             if let c = currentCompartment.storage[compartmentIdx] {
                 nextCompartment = c

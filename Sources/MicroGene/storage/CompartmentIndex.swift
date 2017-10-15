@@ -23,54 +23,45 @@ extension CompartmentId: Hashable {
     }
 }
 
-public struct CompartmentIndex {
-
-    public var id: CompartmentId
-    private var parentStorage: [CompartmentIndex] = []
-
-    public var parent: CompartmentIndex? {
-        get {
-            return parentStorage.first
-        }
-        set {
-            parentStorage.removeAll()
-            if let v = newValue {
-                parentStorage.append(v)
-            }
-        }
-    }
-
-    public init(id: CompartmentId) {
-        self.id = id
-        self.parent = nil
-    }
-
-    public init(id: CompartmentId, parent: CompartmentIndex) {
-        self.id = id
-        self.parent = parent
-    }
+public enum CompartmentIndex {
+    case root
+    indirect case node(id: CompartmentId, parent: CompartmentIndex)
 }
 
 extension CompartmentIndex: Equatable {
     public static func == (lhv: CompartmentIndex, rhv: CompartmentIndex) -> Bool {
-        guard lhv.id == rhv.id else { return false }
-
-        guard lhv.parent == rhv.parent else { return false }
-
-        return true
+        switch (lhv, rhv) {
+        case (.root, .root):
+            return true
+        case let (.node(lid, lparent), .node(rid, rparent)):
+            return lid == rid && lparent == rparent
+        default:
+            return false
+        }
     }
 }
 
+fileprivate let MAGIC_ROOT_VALUE = 9992888331
+
 extension CompartmentIndex: Hashable {
     public var hashValue: Int {
-        return id.hashValue ^ (parent?.hashValue ?? 0)
+        switch self {
+        case .root:
+            return MAGIC_ROOT_VALUE
+        case let .node(id, parent):
+            return hashCombine(lhv: id.hashValue, rhv: parent.hashValue)
+        }
     }
 }
 
 extension CompartmentId {
-    internal static let root = CompartmentId(rawValue: "__root_node")!
+    public static prefix func / (_ id: CompartmentId) -> CompartmentIndex {
+        return .node(id: id, parent: CompartmentIndex.root)
+    }
 }
 
 extension CompartmentIndex {
-    internal static let rootCompartment = CompartmentIndex(id: CompartmentId.root)
+    public static func / (lhv: CompartmentIndex, rhv: CompartmentId) -> CompartmentIndex {
+        return .node(id: rhv, parent: lhv)
+    }
 }

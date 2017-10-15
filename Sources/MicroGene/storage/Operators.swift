@@ -7,4 +7,5 @@
 
 import Foundation
 
+prefix operator /
 

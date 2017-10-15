@@ -77,68 +77,84 @@ class CompartmentIndexTests: XCTestCase {
         debugPrint("NOTE: found different hashValue at i=\(found!)")
     }
 
-    func testIndexEqualsOnlyId() {
-        let one = CompartmentIndex(id: CompartmentId.testId1)
-        let two = CompartmentIndex(id: CompartmentId.testId1)
+    func testIndexEquals() {
+        let one = CompartmentIndex.node(id: CompartmentId.testId1, parent: .root)
+        let two = CompartmentIndex.node(id: CompartmentId.testId1, parent: .root)
         XCTAssertEqual(one, two, "CompartmentIndex'es referencing same CompartmentId should be equal")
     }
 
-    func testIndexEqualsOnlyIdNonReference() {
-        let one = CompartmentIndex(id: CompartmentId(rawValue: "TestTest")!)
-        let two = CompartmentIndex(id: CompartmentId(rawValue: "TestTest")!)
-        XCTAssertEqual(one, two, "CompartmentIndex'es with equal CompartmentId's should be equal")
+    func testIndexEqualsNonReference() {
+        let parentOne = CompartmentIndex.node(id: CompartmentId.testId1, parent: .root)
+        let parentTwo = CompartmentIndex.node(id: CompartmentId.testId1, parent: .root)
+
+        let one = CompartmentIndex.node(id: CompartmentId(rawValue: "TestTest")!, parent: parentOne)
+        let two = CompartmentIndex.node(id: CompartmentId(rawValue: "TestTest")!, parent: parentTwo)
+        XCTAssertEqual(one, two, "CompartmentIndex'es referencing same CompartmentId and having equal parents should be equal")
     }
     
     func testIndexNotEqualsOnlyId() {
-        let one = CompartmentIndex(id: CompartmentId.testId1)
-        let two = CompartmentIndex(id: CompartmentId.testId2)
+        let one = CompartmentIndex.node(id: CompartmentId.testId1, parent: .root)
+        let two = CompartmentIndex.node(id: CompartmentId.testId2, parent: .root)
         XCTAssertNotEqual(one, two, "CompartmentIndex'es referencing different CompartmentId's should not be equal")
     }
 
-    func testIndexEquals() {
-        let root = CompartmentIndex.rootCompartment
-
-        let one = CompartmentIndex(id: CompartmentId.testId1, parent: root)
-        let two = CompartmentIndex(id: CompartmentId.testId1, parent: root)
-        XCTAssertEqual(one, two, "CompartmentIndex'es referencing same CompartmentId and same parent should be equal")
-    }
-
-    func testIndexEqualsNonReference() {
-        let parentOne = CompartmentIndex(id: CompartmentId.testId1)
-        let parentTwo = CompartmentIndex(id: CompartmentId.testId1)
-
-        let one = CompartmentIndex(id: CompartmentId.testId1, parent: parentOne)
-        let two = CompartmentIndex(id: CompartmentId.testId1, parent: parentTwo)
-        XCTAssertEqual(one, two, "CompartmentIndex'es referencing same CompartmentId and having equal parents should be equal")
-    }
-
     func testIndexNotEquals() {
-        let parentOne = CompartmentIndex(id: CompartmentId.testId1)
-        let parentTwo = CompartmentIndex(id: CompartmentId.testId2)
+        let parentOne = CompartmentIndex.node(id: CompartmentId.testId1, parent: .root)
+        let parentTwo = CompartmentIndex.node(id: CompartmentId.testId2, parent: .root)
 
-        let one = CompartmentIndex(id: CompartmentId.testId3, parent: parentOne)
-        let two = CompartmentIndex(id: CompartmentId.testId3, parent: parentTwo)
+        let one = CompartmentIndex.node(id: CompartmentId.testId3, parent: parentOne)
+        let two = CompartmentIndex.node(id: CompartmentId.testId3, parent: parentTwo)
         XCTAssertNotEqual(one, two, "CompartmentIndex'es referencing same CompartmentId but having different parents should not be equal")
 
-        let three = CompartmentIndex(id: CompartmentId.testId3, parent: parentOne)
-        let four = CompartmentIndex(id: CompartmentId.testId4, parent: parentOne)
+        let three = CompartmentIndex.node(id: CompartmentId.testId3, parent: parentOne)
+        let four = CompartmentIndex.node(id: CompartmentId.testId4, parent: parentOne)
         XCTAssertNotEqual(three, four, "CompartmentIndex'es referencing different CompartmentId's but having same parent should not be equal")
 
-        let five = CompartmentIndex(id: CompartmentId.testId3, parent: parentOne)
-        let six = CompartmentIndex(id: CompartmentId.testId4, parent: parentTwo)
+        let five = CompartmentIndex.node(id: CompartmentId.testId3, parent: parentOne)
+        let six = CompartmentIndex.node(id: CompartmentId.testId4, parent: parentTwo)
         XCTAssertNotEqual(five, six, "CompartmentIndex'es referencing different CompartmentId's and different parents should not be equal")
+    }
+
+    func testCompartmentInit() {
+        let compartment = /.testId1
+
+        guard case let .node(id, parent) = compartment else {
+            XCTFail("/CompartmentId should be .node")
+            return
+        }
+
+        XCTAssertEqual(id, .testId1, "/CompartmentId should produce correct id")
+
+        XCTAssertEqual(parent, .root, "/CompartmentId parent should equal .root")
+    }
+
+    func testCompartmentPath() {
+        let compartment = /.testId1 / CompartmentId.testId2
+
+        guard case let .node(id, parent) = compartment else {
+            XCTFail("CompartmentIndex / CompartmentId should be .node")
+            return
+        }
+
+        XCTAssertEqual(id, .testId2, "CompartmentIndex / CompartmentId should produce correct id")
+
+        XCTAssertEqual(parent, CompartmentIndex.node(id: .testId1, parent: .root),
+                       "CompartmentIndex / CompartmentId parent should equal originally set parent")
+
+        XCTAssertEqual(compartment, CompartmentIndex.node(id: .testId2, parent: CompartmentIndex.node(id: .testId1, parent: .root)),
+                       "CompartmentIndex / CompartmentId should equal originally set compartment")
     }
 
     static var allTests = [
         ("testCompartmentIdEquals", testCompartmentIdEquals),
         ("testCompartmentIdNotEquals", testCompartmentIdNotEquals),
         ("testCompartmentIdHash", testCompartmentIdHash),
-        ("testIndexEqualsOnlyId", testIndexEqualsOnlyId),
-        ("testIndexEqualsOnlyIdNonReference", testIndexEqualsOnlyIdNonReference),
         ("testIndexNotEqualsOnlyId", testIndexNotEqualsOnlyId),
         ("testIndexEquals", testIndexEquals),
         ("testIndexEqualsNonReference", testIndexEqualsNonReference),
         ("testIndexNotEquals", testIndexNotEquals),
+        ("testCompartmentInit", testCompartmentInit),
+        ("testCompartmentPath", testCompartmentPath),
     ]
 }
 
