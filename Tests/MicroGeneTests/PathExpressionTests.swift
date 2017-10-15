@@ -18,6 +18,9 @@ class PathExpressionTests: XCTestCase {
             !(/.testId1 / .testId2) / .any / !.stored1,
             /(!.testId1) / !.stored1,
             /.any / !.stored1,
+            /(!.testId1) / .repeating(~/.any) / !.stored1,
+            /(!.testId1) / .repeating(~/(!.testId2) / .any) / !.stored1,
+            /.repeating(~/.any) / !.stored1,
         ]
     }
 

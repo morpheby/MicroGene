@@ -8,3 +8,4 @@
 import Foundation
 
 prefix operator /
+prefix operator ~/

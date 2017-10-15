@@ -22,6 +22,10 @@ public enum CompartmentPartialExpression {
     case root(CompartmentIdExpression)
 }
 
+public enum CompartmentRepeatingExpression {
+    case repeating(CompartmentPartialExpression)
+}
+
 public enum CompartmentExpression {
     indirect case node(CompartmentIdExpression, parent: CompartmentExpression)
     indirect case repeating(expression: CompartmentPartialExpression, parent: CompartmentExpression)
@@ -55,6 +59,10 @@ extension CompartmentIdExpression {
     public static prefix func / (_ value: CompartmentIdExpression) -> CompartmentExpression {
         return .node(value, parent: .root(.root))
     }
+
+    public static prefix func ~/ (_ value: CompartmentIdExpression) -> CompartmentPartialExpression {
+        return .root(value)
+    }
 }
 
 extension Path {
@@ -68,8 +76,9 @@ extension CompartmentExpression {
         return .node(rhv, parent: lhv)
     }
 
-    public static func / (lhv: CompartmentExpression, rhv: CompartmentPartialExpression) -> CompartmentExpression {
-        return .repeating(expression: rhv, parent: lhv)
+    public static func / (lhv: CompartmentExpression, rhv: CompartmentRepeatingExpression) -> CompartmentExpression {
+        guard case let .repeating(value) = rhv else { fatalError("Unsupported enum (somehow)") }
+        return .repeating(expression: value, parent: lhv)
     }
 
     public static func / (lhv: CompartmentExpression, rhv: StorableExpression) -> PathExpression {
@@ -77,3 +86,15 @@ extension CompartmentExpression {
     }
 }
 
+extension CompartmentRepeatingExpression {
+    public static prefix func / (_ value: CompartmentRepeatingExpression) -> CompartmentExpression {
+        guard case let .repeating(v) = value else { fatalError("Unsupported enum (somehow)") }
+        return .repeating(expression: v, parent: .root(.root))
+    }
+}
+
+extension CompartmentPartialExpression {
+    public static func / (lhv: CompartmentPartialExpression, rhv: CompartmentIdExpression) -> CompartmentPartialExpression {
+        return .node(rhv, parent: lhv)
+    }
+}
