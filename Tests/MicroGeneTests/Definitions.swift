@@ -17,10 +17,15 @@ extension CompartmentId {
 }
 
 extension StorableId {
-    static let testId1 = StorableId(rawValue: "Stored1")!
-    static let testId2 = StorableId(rawValue: "Stored2")!
-    static let testId3 = StorableId(rawValue: "Stored3")!
-    static let testId4 = StorableId(rawValue: "Stored4")!
+    static let testId1 = StorableId(rawValue: "TestStored1")!
+    static let testId2 = StorableId(rawValue: "TestStored2")!
+    static let testId3 = StorableId(rawValue: "TestStored3")!
+    static let testId4 = StorableId(rawValue: "TestStored4")!
+
+    static let stored1 = StorableId(rawValue: "Stored1")!
+    static let stored2 = StorableId(rawValue: "Stored2")!
+    static let stored3 = StorableId(rawValue: "Stored3")!
+    static let stored4 = StorableId(rawValue: "Stored4")!
 }
 
 extension String: Storable { }

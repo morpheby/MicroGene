@@ -5,4 +5,5 @@ XCTMain([
     testCase(CompartmentIndexTests.allTests),
     testCase(PathTests.allTests),
     testCase(StorageTests.allTests),
+    testCase(PathExpressionTests.allTests),
 ])

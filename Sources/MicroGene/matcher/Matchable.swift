@@ -34,8 +34,28 @@ private struct VariableBinding<Matcher, Variable> where Matcher: Matchable, Vari
     }
 }
 
+extension VariableBinding: Equatable {
+    static func == (lhv: VariableBinding<Matcher, Variable>, rhv: VariableBinding<Matcher, Variable>) -> Bool {
+        return lhv.keyPath == rhv.keyPath
+        // XXX: Maybe also compare path
+    }
+}
+
+extension VariableBinding: Hashable {
+    var hashValue: Int {
+        return keyPath.hashValue
+    }
+}
+
+extension VariableBinding: AnyHashableConvertible {
+    public var anyHashable: AnyHashable {
+        return AnyHashable(self)
+    }
+}
+
 public protocol Matchable {
     static var bindings: [AnyVariableBinding] { get }
+    static var priority: Int { get }
 
     init()
 
