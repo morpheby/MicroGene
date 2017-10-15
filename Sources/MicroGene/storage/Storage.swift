@@ -12,7 +12,7 @@ public class Storage: Storing {
     private class StorageCompartment {
         let index: CompartmentIndex
         var storage: [CompartmentIndex: StorageCompartment] = [:]
-        var localData: [StorableId: Storable] = [:]
+        var localData: [StorableId: [Storable]] = [:]
 
         init(index: CompartmentIndex) {
             self.index = index
@@ -53,10 +53,10 @@ public class Storage: Storing {
     public func put(data: Storable, to path: Path) {
         let compartment = self.compartment(for: path)
 
-        precondition(compartment.localData[path.storable] == nil,
-                     "Data already present. Overwrite and overlay are forbidden in MicroGene")
-
-        compartment.localData[path.storable] = data
+        if compartment.localData[path.storable] == nil {
+            compartment.localData[path.storable] = []
+        }
+        compartment.localData[path.storable]!.append(data)
 
         delegate?.didPutValue(storage: self, for: path, value: data)
     }
@@ -64,7 +64,11 @@ public class Storage: Storing {
     public func take(from path: Path) -> Storable? {
         let compartment = self.compartment(for: path)
 
-        let data = compartment.localData.removeValue(forKey: path.storable)
+        let data = compartment.localData[path.storable]?.removeFirst()
+
+        if compartment.localData[path.storable]?.count == 0 {
+            compartment.localData[path.storable] = nil
+        }
 
         if let d = data {
             delegate?.didTakeValue(storage: self, for: path, value: d)

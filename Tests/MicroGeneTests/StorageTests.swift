@@ -33,10 +33,44 @@ class StorageTests: XCTestCase {
 
         storage.put(data: data, to: /.testId1 / .testId1)
         let takenDataTwo = storage.take(from: /.testId1 / .testId2)
-        XCTAssertNil(takenDataTwo, "Compartments should store different 's separately")
+        XCTAssertNil(takenDataTwo, "Compartments should store different Storable's separately")
 
         let takenDataThree = storage.take(from: /.testId2 / .testId1)
         XCTAssertNil(takenDataThree, "Compartments should be separate")
+    }
+
+    func testPutTakeDeep() {
+        let storage = Storage()
+
+        let data = "ABC"
+
+        let pretakenData = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        XCTAssertNil(pretakenData, "Storage.take should return nil when data is not present at path")
+
+        storage.put(data: data, to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+
+        let takenData = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        XCTAssertEqual(data, takenData as? String, "Storage.take should return exactly what was Storage.put at same path")
+
+        let retakenData = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        XCTAssertNil(retakenData, "Storage.take should return nil when data was already Storage.taken")
+
+        storage.put(data: data, to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let takenDataOne = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        XCTAssertEqual(data, takenDataOne as? String, "Storage.take should return exactly what was Storage.put at same path")
+
+        storage.put(data: data, to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let takenDataTwo = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored2)
+        XCTAssertNil(takenDataTwo, "Compartments should store different Storable's separately")
+
+        let takenDataThree = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId1 / .stored1)
+        XCTAssertNil(takenDataThree, "Compartments should be separate")
+
+        let takenDataFour = storage.take(from: /.testId1 / .testId4 / .testId3 / .testId4 / .stored1)
+        XCTAssertNil(takenDataFour, "Compartments should be separate")
+
+        let takenDataFive = storage.take(from: /.testId3 / .testId2 / .testId3 / .testId4 / .stored1)
+        XCTAssertNil(takenDataFive, "Compartments should be separate")
     }
 
     class Delegate: StorageDelegate {
@@ -218,10 +252,39 @@ class StorageTests: XCTestCase {
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
     }
 
+    func testMultiStorage() {
+        let storage = Storage()
+
+        let dataOne = "ABC"
+        let dataTwo = "ABCD"
+
+        let pretakenData = storage.take(from: /.testId1 / .testId1)
+        XCTAssertNil(pretakenData, "Storage.take should return nil when data is not present at path")
+
+        storage.put(data: dataOne, to: /.testId1 / .testId1)
+
+        let takenData = storage.take(from: /.testId1 / .testId1)
+        XCTAssertEqual(dataOne, takenData as? String, "Storage.take should return exactly what was Storage.put at same path")
+
+        let retakenData = storage.take(from: /.testId1 / .testId1)
+        XCTAssertNil(retakenData, "Storage.take should return nil when data was already Storage.taken")
+
+        storage.put(data: dataOne, to: /.testId1 / .testId1)
+        storage.put(data: dataTwo, to: /.testId1 / .testId1)
+        let takenDataOne = storage.take(from: /.testId1 / .testId1)
+        let takenDataTwo = storage.take(from: /.testId1 / .testId1)
+
+        let allData = Set([dataOne, dataTwo])
+        let allTakenData = Set([takenDataOne as? String, takenDataTwo as? String].flatMap { x in x})
+        XCTAssertEqual(allData, allTakenData, "Storage.take should return exactly what was Storage.put at same path")
+    }
+
     static var allTests = [
         ("testPutTake", testPutTake),
+        ("testPutTakeDeep", testPutTakeDeep),
         ("testDelegateTakePut", testDelegateTakePut),
         ("testDelegateTakeInPut", testDelegateTakeInPut),
         ("testDelegatePutInTake", testDelegatePutInTake),
+        ("testMultiStorage", testMultiStorage),
     ]
 }
