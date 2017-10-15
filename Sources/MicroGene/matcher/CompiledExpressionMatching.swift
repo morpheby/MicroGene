@@ -67,7 +67,7 @@ extension CompiledCompartmentExpression: CompiledExpressionMatching {
         result.append(contentsOf: anyNode.boxed?.match(parent) ?? [])
 
         for (partial, parentExpression) in staticRepeatingPartials {
-            var lastSuccess: CompartmentIndex? = parent
+            var lastSuccess: CompartmentIndex? = compartment
             while let compartment = lastSuccess {
                 let newIndex = partial.match(compartment)
                 if let r = newIndex {

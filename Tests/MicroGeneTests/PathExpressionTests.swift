@@ -23,53 +23,74 @@ class PathExpressionTests: XCTestCase {
         /.testId1 / .testId4 / .testId3 / .testId2 / .testId1 / .testId4 / .stored1,
         /.testId1 / .testId2 / .testId3 / .testId2 / .testId1 / .testId2 / .testId4 / .stored1,
         /.testId1 / .testId2 / .testId3 / .testId2 / .testId1 / .testId2 / .testId4 / .stored2,
+        /.testId2 / .testId2 / .testId3 / .testId2 / .testId1 / .testId2 / .testId4 / .stored1,
     ]
 
     let list: [(PathExpression, [Bool])] = [
         ( /.any / .any,
           [true, true, true, true,
            false, false, false,
-           false, false, false] ),
+           false, false, false, false] ),
 
         ( !(/.testId1 / .stored1),
           [true, false, false, false,
            false, false, false,
-           false, false, false] ),
+           false, false, false, false] ),
 
         ( !(/.testId1) / .any,
           [true, false, false, true,
            false, false, false,
-           false, false, false] ),
+           false, false, false, false] ),
 
         ( !(/.testId1 / .testId2) / .any / !.stored1,
           [false, false, false, false,
            true, false, true,
-           false, false, false] ),
+           false, false, false, false] ),
 
         ( /(!.testId1) / !.stored1,
           [true, false, false, false,
            false, false, false,
-           false, false, false] ),
+           false, false, false, false] ),
 
         ( /.any / !.stored1,
           [true, true, false, false,
            false, false, false,
-           false, false, false] ),
+           false, false, false, false] ),
 
         ( /(!.testId1) / .repeating(~/.any) / !.stored1,
           [false, false, false, false,
            true, false, true,
-           true, true, false] ),
+           true, true, false, false] ),
 
         ( /(!.testId1) / .repeating(~/(!.testId2) / .any) / !.stored1,
           [false, false, false, false,
            true, false, true,
-           false, true, false] ),
+           false, true, false, false] ),
 
         ( /.repeating(~/.any) / !.stored1,
           [true, true, false, false,
            true, false, true,
-           true, true, false] ),
+           true, true, false, true] ),
+
+        ( /(!.testId2) / .repeating(~/.any) / !.stored1,
+          [false, false, false, false,
+           false, false, false,
+           false, false, false, true] ),
+
+        ( /.any / !.stored1 || /.any / !.stored2,
+          [true, true, true, true,
+           false, false, false,
+           false, false, false, false] ),
+
+        ( /.any / .repeating(~/.any) / !.testId2 / .repeating(~/.any) / !.stored1,
+          [false, false, false, false,
+           false, false, false,
+           true, true, false, true] ),
+
+        ( /.any / .repeating(~/.any) / .repeating(~/.any) / !.stored1,
+          [false, false, false, false,
+           true, false, true,
+           true, true, false, true] ),
     ]
 
     func testExpressions() {
