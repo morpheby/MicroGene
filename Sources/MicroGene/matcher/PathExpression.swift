@@ -98,3 +98,9 @@ extension CompartmentPartialExpression {
         return .node(rhv, parent: lhv)
     }
 }
+
+extension PathExpression {
+    public static func || (lhv: PathExpression, rhv: PathExpression) -> PathExpression {
+        return .or(lhv, rhv)
+    }
+}
