@@ -29,32 +29,16 @@ protocol CompiledPartialExpressionMatching {
     func match(_ value: Match) -> [(Match, Result)]
 }
 
-struct CompiledCompartmentPartialExpression<T> {
-    var node: [CompartmentId: CompiledCompartmentPartialExpression]
-    var root: [CompartmentId: CompiledCompartmentExpression<T>]
-
-    var anyRoot: Box<CompiledCompartmentExpression<T>?>
-    var anyNode: Box<CompiledCompartmentPartialExpression?>
-
-    fileprivate init() {
-        self.node = [:]
-        self.root = [:]
-        self.anyRoot = Box(nil)
-        self.anyNode = Box(nil)
-    }
-}
-
 struct CompiledCompartmentExpression<T> {
     var node: [CompartmentId: CompiledCompartmentExpression<T>]
-    var repeating: CompiledCompartmentPartialExpression<T>
-    var staticRepeatingPartials: CompartmentPartialExpression
+    var staticRepeatingPartials: [CompartmentPartialExpression: CompiledCompartmentExpression<T>]
     var root: CompiledExpressionBox<T>
 
     var anyNode: Box<CompiledCompartmentExpression<T>?>
 
     fileprivate init() {
         self.node = [:]
-        self.repeating = CompiledCompartmentPartialExpression()
+        self.staticRepeatingPartials = [:]
         self.root = CompiledExpressionBox([])
         self.anyNode = Box(nil)
     }
@@ -70,28 +54,6 @@ struct CompiledPathExpression<T> {
     }
 }
 
-extension CompiledCompartmentPartialExpression: CompiledPartialExpressionMatching {
-    typealias Match = CompartmentIndex
-    typealias Result = CompiledCompartmentExpression<T>
-
-    func match(_ compartment: CompartmentIndex) -> [(CompartmentIndex, CompiledCompartmentExpression<T>)] {
-        var result: [(CompartmentIndex, CompiledCompartmentExpression<T>)] = []
-        guard case let .node(otherId, parent) = compartment else { return result }
-
-        result.append(contentsOf: node[otherId]?.match(parent) ?? [])
-        result.append(contentsOf: anyNode.boxed?.match(parent) ?? [])
-
-        if let a = anyRoot.boxed {
-            result.append((parent, a))
-        }
-        if let a = root[otherId] {
-            result.append((parent, a))
-        }
-
-        return result
-    }
-}
-
 extension CompiledCompartmentExpression: CompiledExpressionMatching {
     typealias Match = CompartmentIndex
     typealias Result = CompiledExpressionBox<T>
@@ -104,26 +66,16 @@ extension CompiledCompartmentExpression: CompiledExpressionMatching {
         result.append(contentsOf: node[otherId]?.match(parent) ?? [])
         result.append(contentsOf: anyNode.boxed?.match(parent) ?? [])
 
-//        var lastSuccess: CompartmentIndex? = parent
-//        while let compartment = lastSuccess {
-//            let result = partial.match(compartment)
-//            if let r = result {
-//                if parent.match(r) {
-//                    return true
-//                }
-//            }
-//            lastSuccess = result
-//        }
-
-//        var possibleRepeats: [(CompartmentIndex, CompiledCompartmentPartialExpression<T>)] = [(compartment, repeating)]
-//        while !possibleRepeats.isEmpty {
-//            let (c, r) = possibleRepeats.removeFirst()
-//
-//            let newRepeats = r.match(c)
-//
-//            result.append(contentsOf: newRepeats.flatMap { index, parent in parent.match(index) })
-//            possibleRepeats.append(contentsOf: newRepeats.map { index, _ in (index, r) })
-//        }
+        for (partial, parentExpression) in staticRepeatingPartials {
+            var lastSuccess: CompartmentIndex? = parent
+            while let compartment = lastSuccess {
+                let newIndex = partial.match(compartment)
+                if let r = newIndex {
+                    result.append(contentsOf: parentExpression.match(r))
+                }
+                lastSuccess = newIndex
+            }
+        }
 
         return result
     }
@@ -158,26 +110,8 @@ extension CompiledCompartmentExpression {
         case .root(.root):
             root.list.append(value)
         case let .repeating(expression: partial, parent: parentExpression):
-            repeating._add(partialExpression: partial)
-            if repeatingParent.boxed == nil { repeatingParent.boxed = CompiledCompartmentExpression() }
-            repeatingParent.boxed?._add(compartmentExpression: parentExpression, with: value)
-        }
-    }
-}
-
-extension CompiledCompartmentPartialExpression {
-    fileprivate mutating func _add(partialExpression: CompartmentPartialExpression) {
-        switch partialExpression {
-        case let .node(.any, parentPartial):
-            if anyNode.boxed == nil { anyNode.boxed = CompiledCompartmentPartialExpression() }
-            anyNode.boxed?._add(partialExpression: parentPartial)
-        case let .node(.id(id), parentPartial):
-            if node[id] == nil { node[id] = CompiledCompartmentPartialExpression() }
-            node[id]?._add(partialExpression: parentPartial)
-        case .root(.any):
-            anyRoot = true
-        case let .root(.id(id)):
-            root.insert(id)
+            if staticRepeatingPartials[partial] == nil { staticRepeatingPartials[partial] = CompiledCompartmentExpression() }
+            staticRepeatingPartials[partial]?._add(compartmentExpression: parentExpression, with: value)
         }
     }
 }

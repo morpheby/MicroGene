@@ -105,6 +105,54 @@ extension PathExpression {
     }
 }
 
+extension CompartmentIdExpression: Equatable {
+    public static func == (lhv: CompartmentIdExpression, rhv: CompartmentIdExpression) -> Bool {
+        switch (lhv, rhv) {
+        case (.any, .any):
+            return true
+        case let (.id(lid), .id(rid)) where lid == rid:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+extension CompartmentIdExpression: Hashable {
+    public var hashValue: Int {
+        switch self {
+        case .any:
+            return 8798785679
+        case let .id(id):
+            return id.hashValue
+        }
+    }
+}
+
+extension CompartmentPartialExpression: Equatable {
+    public static func == (lhv: CompartmentPartialExpression, rhv: CompartmentPartialExpression) -> Bool {
+        switch (lhv, rhv) {
+        case let (.node(lid, lpartial), .node(rid, rpartial)) where lid == rid && lpartial == rpartial:
+            return true
+        case let (.root(lidx), .root(ridx)) where lidx == ridx:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+extension CompartmentPartialExpression: Hashable {
+    public var hashValue: Int {
+        switch self {
+        case let .node(id, parent: partial):
+            return hashCombine(lhv: id.hashValue, rhv: partial.hashValue)
+        case let .root(id):
+            return id.hashValue
+        }
+    }
+}
+
 extension StorableExpression: CustomStringConvertible {
     public var description: String {
         switch self {
