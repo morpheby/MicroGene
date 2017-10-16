@@ -14,11 +14,11 @@ public class Executor: Executing {
 }
 
 extension Executor: StorageDelegate {
-    public func didTakeValue(storage: Storage, for path: Path, value: Storable) {
+    public func didTakeValue(storage: Storage, for path: Path, value: AnyStorable) {
 
     }
 
-    public func didPutValue(storage: Storage, for path: Path, value: Storable) {
+    public func didPutValue(storage: Storage, for path: Path, value: AnyStorable) {
 
     }
 }

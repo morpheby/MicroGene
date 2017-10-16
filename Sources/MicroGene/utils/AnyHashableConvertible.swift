@@ -7,6 +7,6 @@
 
 import Foundation
 
-internal protocol AnyHashableConvertible {
+public protocol AnyHashableConvertible {
     var anyHashable: AnyHashable { get }
 }

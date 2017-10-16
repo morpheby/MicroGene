@@ -124,7 +124,7 @@ class PathExpressionTests: XCTestCase {
 
         for (path, allExpressionIdxs) in pathList {
             let a = Set(allExpressionIdxs)
-            let b = Set(tree.allExpressions(satisfying: path).map { b in b.boxed })
+            let b = Set(tree.allExpressions(satisfying: path))
             let aDiff = a.subtracting(b)
             let bDiff = b.subtracting(a)
             XCTAssertEqual(a, b,

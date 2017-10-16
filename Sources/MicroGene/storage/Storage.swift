@@ -12,7 +12,7 @@ public class Storage: Storing {
     private class StorageCompartment {
         let index: CompartmentIndex
         var storage: [CompartmentIndex: StorageCompartment] = [:]
-        var localData: [StorableId: [Storable]] = [:]
+        var localData: [StorableId: [AnyStorable]] = [:]
 
         init(index: CompartmentIndex) {
             self.index = index
@@ -50,7 +50,7 @@ public class Storage: Storing {
         return currentCompartment
     }
 
-    public func put(data: Storable, to path: Path) {
+    public func put(data: AnyStorable, to path: Path) {
         let compartment = self.compartment(for: path)
 
         if compartment.localData[path.storable] == nil {
@@ -61,27 +61,33 @@ public class Storage: Storing {
         delegate?.didPutValue(storage: self, for: path, value: data)
     }
 
-    public func take(from path: Path) -> Storable? {
+    public func take<T>(from path: Path) -> T? where T: AnyStorable {
         let compartment = self.compartment(for: path)
 
-        let data = compartment.localData[path.storable]?.removeFirst()
+        var found: T? = nil
+
+        if let dataView = compartment.localData[path.storable] {
+            if let dataIdx = (dataView.index { v in v as? T != nil }) {
+                found = (compartment.localData[path.storable]?.remove(at: dataIdx) as! T)
+            }
+        }
 
         if compartment.localData[path.storable]?.count == 0 {
             compartment.localData[path.storable] = nil
         }
 
-        if let d = data {
+        if let d = found {
             delegate?.didTakeValue(storage: self, for: path, value: d)
         }
 
-        return data
+        return found
     }
 }
 
 public protocol StorageDelegate {
     /// Invoked right after adding value to the compartment.
-    func didPutValue(storage: Storage, for path: Path, value: Storable)
-    func didTakeValue(storage: Storage, for path: Path, value: Storable)
+    func didPutValue(storage: Storage, for path: Path, value: AnyStorable)
+    func didTakeValue(storage: Storage, for path: Path, value: AnyStorable)
 }
 
 

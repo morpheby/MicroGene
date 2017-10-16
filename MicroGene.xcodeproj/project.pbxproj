@@ -44,6 +44,7 @@
 		F6A87C681F909BE70022D46E /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C671F909BE70022D46E /* PathTests.swift */; };
 		F6A87C6A1F909C4D0022D46E /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C691F909C4D0022D46E /* Definitions.swift */; };
 		F6A87C6C1F90A4230022D46E /* StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A87C6B1F90A4230022D46E /* StorageTests.swift */; };
+		F6ED5E031F94A81E00375D70 /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ED5E011F94A80E00375D70 /* MatcherTests.swift */; };
 		F6EF800D1F937ED70095AEE6 /* CompiledExpressionMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EF800B1F937E4F0095AEE6 /* CompiledExpressionMatching.swift */; };
 		F6EF80131F93960F0095AEE6 /* flatten.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EF80111F93960C0095AEE6 /* flatten.swift */; };
 		F6EF80151F93991E0095AEE6 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EF80141F93991E0095AEE6 /* Box.swift */; };
@@ -93,6 +94,7 @@
 		F6A87C671F909BE70022D46E /* PathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
 		F6A87C691F909C4D0022D46E /* Definitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
 		F6A87C6B1F90A4230022D46E /* StorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTests.swift; sourceTree = "<group>"; };
+		F6ED5E011F94A80E00375D70 /* MatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		F6EF800B1F937E4F0095AEE6 /* CompiledExpressionMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompiledExpressionMatching.swift; sourceTree = "<group>"; };
 		F6EF80111F93960C0095AEE6 /* flatten.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = flatten.swift; sourceTree = "<group>"; };
 		F6EF80141F93991E0095AEE6 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 		F6A87C4E1F9056250022D46E /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				F6A87C611F90623C0022D46E /* Operators.swift */,
 				F66DFB1E1F9229A30048C225 /* AnyHashableConvertible.swift */,
 				F66DFB201F9315540048C225 /* HashCombine.swift */,
 				F6EF80111F93960C0095AEE6 /* flatten.swift */,
@@ -171,7 +174,6 @@
 				F6A87C5B1F905B520022D46E /* Path.swift */,
 				F6A87C5D1F905EDB0022D46E /* Storing.swift */,
 				F6A87C5F1F905FCC0022D46E /* StorableId.swift */,
-				F6A87C611F90623C0022D46E /* Operators.swift */,
 			);
 			path = storage;
 			sourceTree = "<group>";
@@ -193,6 +195,7 @@
 				F6A87C691F909C4D0022D46E /* Definitions.swift */,
 				F6A87C6B1F90A4230022D46E /* StorageTests.swift */,
 				F66DFB221F9327C00048C225 /* PathExpressionTests.swift */,
+				F6ED5E011F94A80E00375D70 /* MatcherTests.swift */,
 			);
 			path = MicroGeneTests;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				F6ED5E031F94A81E00375D70 /* MatcherTests.swift in Sources */,
 				F6A87C6A1F909C4D0022D46E /* Definitions.swift in Sources */,
 				F66DFB241F93286F0048C225 /* PathExpressionTests.swift in Sources */,
 				F6A87C681F909BE70022D46E /* PathTests.swift in Sources */,

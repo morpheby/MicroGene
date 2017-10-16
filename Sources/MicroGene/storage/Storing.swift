@@ -8,6 +8,6 @@
 import Foundation
 
 internal protocol Storing {
-    func put(data: Storable, to: Path)
-    func take(from: Path) -> Storable?
+    func put(data: AnyStorable, to: Path)
+    func take<T>(from: Path) -> T? where T: AnyStorable
 }

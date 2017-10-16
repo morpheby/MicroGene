@@ -8,9 +8,9 @@
 import Foundation
 
 struct CompiledExpressionBox<T> {
-    var list: [Box<T>]
+    var list: [T]
 
-    init(_ list: [Box<T>]) {
+    init(_ list: [T]) {
         self.list = list
     }
 }
@@ -96,7 +96,7 @@ extension CompiledPathExpression: CompiledExpressionMatching {
 }
 
 extension CompiledCompartmentExpression {
-    fileprivate mutating func _add(compartmentExpression: CompartmentExpression, with value: Box<T>) {
+    fileprivate mutating func _add(compartmentExpression: CompartmentExpression, with value: T) {
         switch compartmentExpression {
         case let .node(.any, parent: parentExpression):
             if anyNode.boxed == nil { anyNode.boxed = CompiledCompartmentExpression() }
@@ -117,7 +117,7 @@ extension CompiledCompartmentExpression {
 }
 
 extension CompiledPathExpression {
-    fileprivate mutating func _add(pathExpression: PathExpression, with value: Box<T>) {
+    fileprivate mutating func _add(pathExpression: PathExpression, with value: T) {
         switch pathExpression {
         case let .or(one, two):
             _add(pathExpression: one, with: value)
@@ -147,11 +147,10 @@ struct PathMatchingTree<T> {
     }
 
     mutating func add(pathExpression: PathExpression, with value: T) {
-        let box = Box(value)
-        compiledPathExpression._add(pathExpression: pathExpression, with: box)
+        compiledPathExpression._add(pathExpression: pathExpression, with: value)
     }
 
-    func allExpressions(satisfying path: Path) -> [Box<T>] {
+    func allExpressions(satisfying path: Path) -> [T] {
         let compiled = compiledPathExpression.match(path)
         return compiled.flatMap { c in c.list}
     }

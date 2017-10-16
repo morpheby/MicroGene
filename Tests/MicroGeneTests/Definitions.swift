@@ -29,3 +29,5 @@ extension StorableId {
 }
 
 extension String: Storable { }
+
+extension Int: Storable { }

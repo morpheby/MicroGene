@@ -9,3 +9,4 @@ import Foundation
 
 prefix operator /
 prefix operator ~/
+infix operator <>: AdditionPrecedence
