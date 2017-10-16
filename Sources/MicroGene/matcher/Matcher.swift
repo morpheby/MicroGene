@@ -37,7 +37,10 @@ public class Matcher: Matching {
         _compiledExpressions = PathMatchingTree()
     }
 
-    public func match(value: AnyStorable, at path: Path, storage: Storing) {
+    /// Check if a new value `value` at `path` can match any of the registered `Matchable`a.
+    /// If it can, it returns `true`, and the value is already taken (you shouldn't save it into storage then).
+    /// It it can't, it returns `false` and you should store the value to the storage.
+    public func match(value: AnyStorable, at path: Path, storage: Storing) -> Bool {
         let candidateList = compiledExpressions.allExpressions(satisfying: path).lazy
             .filter { c in c.binding.isCompatible(with: type(of: value)) }
             .sorted { (lhv, rhv) -> Bool in
@@ -108,7 +111,7 @@ public class Matcher: Matching {
                             storage.put(values: values.map { v in v.boxed }, to: path)
                         }
                         concreteBinding.information.boxed.onMatch(potential)
-                        return
+                        return true
                     }
                 }
 
@@ -125,6 +128,8 @@ public class Matcher: Matching {
 
             concreteBinding.information.boxed.partials[concreteBinding.binding.anyHashable] = partials
         }
+        
+        return false
     }
 
     private func compileExpressions() {

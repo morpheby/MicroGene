@@ -75,21 +75,50 @@ class MatcherTests: XCTestCase {
 
         XCTAssertFalse(matched, "Too early")
 
-        storage.put(data: abc, to: /.testId1 / .stored1)
-
-        matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage)
+        if !matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage) {
+            storage.put(data: abc, to: /.testId1 / .stored1)
+        } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        storage.put(data: abc, to: /.testId1 / .stored2)
+        if !matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage) {
+            storage.put(data: abc, to: /.testId1 / .stored1)
+        } else { XCTFail("Match shouldn't have happened") }
+        XCTAssertFalse(matched, "Too early")
 
-        matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage)
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
+            XCTFail("Match should've happened")
+            return
+        }
         XCTAssertTrue(matched, "Match should've been successful")
+
+        matched = false
+
+        let takenTwo: String? = storage.take(from: /.testId1 / .stored2)
+        XCTAssertNil(takenTwo, "Data should've been taken")
+
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage){
+            XCTFail("Match should've happened")
+            return
+        }
+        XCTAssertTrue(matched, "Match should've been successful")
+
+        matched = false
 
         let takenOne: String? = storage.take(from: /.testId1 / .stored1)
         XCTAssertNil(takenOne, "Data should've been taken")
 
-        let takenTwo: String? = storage.take(from: /.testId1 / .stored2)
-        XCTAssertNil(takenTwo, "Data should've been taken")
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
+            storage.put(data: abc, to: /.testId1 / .stored2)
+        } else { XCTFail("Match shouldn't have happened") }
+        XCTAssertFalse(matched, "Too early")
+
+        if !matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage) {
+            XCTFail("Match should've happened")
+            return
+        }
+        XCTAssertTrue(matched, "Match should've been successful")
+
+        matched = false
     }
 
     static var allTests = [
