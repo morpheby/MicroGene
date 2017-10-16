@@ -9,10 +9,9 @@ import Foundation
 
 public class Matcher: Matching {
 
-    private struct BindingInformation {
+    public struct BindingInformation {
         var binding: AnyVariableBinding
         var path: Path
-        var value: AnyStorable
     }
 
     private struct MathableInformation {
@@ -38,7 +37,7 @@ public class Matcher: Matching {
         _compiledExpressions = PathMatchingTree()
     }
 
-    public func match(value: AnyStorable, at path: Path, removed: Bool) {
+    public func match(value: AnyStorable, at path: Path, storage: Storing) {
         let candidateList = compiledExpressions.allExpressions(satisfying: path).lazy
             .filter { c in c.binding.isCompatible(with: type(of: value)) }
             .sorted { (lhv, rhv) -> Bool in
@@ -49,50 +48,79 @@ public class Matcher: Matching {
                 }
             }
 
+        let boxedValue = Box(value)
+
         for concreteBinding in candidateList {
             var partials = concreteBinding.information.boxed.partials[concreteBinding.binding.anyHashable] ?? []
 
-            if removed {
-                partials = partials.filter { p in p.path == path }
-            } else {
-                // Yeah, that seems like a terrible solution, but it is the only way in MicroGene — GeSA will have full expressions and
-                // affectively such crude method won't be required anymore. MicroGene — is for micro tasks, not huge projects :)
-                let newBinding = BindingInformation(binding: concreteBinding.binding, path: path, value: value)
+            // Yeah, that seems like a terrible solution, but it is the only way in MicroGene — GeSA will have full expressions and
+            // affectively such crude method won't be required anymore. MicroGene — is for micro tasks, not huge projects :)
+            let newBinding = BindingInformation(binding: concreteBinding.binding, path: path)
 
-                // First, collect other vars
-                let otherVars = concreteBinding.information.boxed.partials.filter { key, _ in key != concreteBinding.binding.anyHashable }
+            // First, collect other vars
+            let otherVars = concreteBinding.information.boxed.partials.filter { key, _ in key != concreteBinding.binding.anyHashable }
 
-                // Proceed only if all variables have been set
-                if Set(otherVars.keys) == Set(concreteBinding.information.boxed.type.bindings.map { b in b.anyHashable }) {
+            // Proceed only if all variables have been set
+            if Set(otherVars.keys) == Set(concreteBinding.information.boxed.type.bindings.map { b in b.anyHashable }) {
 
-                    // Collect all combinations
-                    var possibleMatches: [[BindingInformation]] = [[]]
-                    for (_, bindings) in otherVars {
-                        // Compute cartesian product
-                        var new: [[BindingInformation]] = []
-                        for b in bindings {
-                            for a in possibleMatches {
-                                new.append(a + [b])
+                // Collect all combinations
+                var possibleMatches: [[(BindingInformation, Box<AnyStorable>)]] = [[]]
+                var takenVars: [Path: [Box<AnyStorable>]] = [:]
+                for (_, bindings) in otherVars {
+                    // Compute cartesian product
+                    var new: [[(BindingInformation, Box<AnyStorable>)]] = []
+                    let bindVars: [(BindingInformation, Box<AnyStorable>)] =
+                        bindings.flatMap { (b: BindingInformation) -> [(BindingInformation, Box<AnyStorable>)] in
+                            // Take everything
+                            let t: [AnyStorable] = storage.takeAll(from: b.path)
+                            if t.count == 0 {
+                                concreteBinding.information.boxed.partials[b.binding.anyHashable]?.remove(
+                                    at: (concreteBinding.information.boxed.partials[b.binding.anyHashable]?.index { v in v.path == b.path })!)
+                            }
+                            // Leave out only those that are of a usable type to use
+                            let tTake = t.filter { v in b.binding.isCompatible(with: type(of: v)) } .map { v in Box(v) }
+                            let tReturn = t.filter { v in !b.binding.isCompatible(with: type(of: v)) }
+
+                            takenVars[b.path] = tTake
+                            storage.put(values: tReturn, to: b.path)
+                            return tTake.map {(x: Box<AnyStorable>) -> (BindingInformation,Box<AnyStorable>) in
+                                return (b,x)
                             }
                         }
-                        possibleMatches = new.map { a in a + [newBinding] }
+                    for b in bindVars {
+                        for a in possibleMatches {
+                            new.append(a + [b])
+                        }
                     }
+                    possibleMatches = new.map { a in a + [(newBinding, boxedValue)] }
+                }
 
-                    // Check every combination till something is found
-                    for vars in possibleMatches {
-                        var potential: Matchable = concreteBinding.information.boxed.type.init()
-                        for bindingInfo in vars {
-                            bindingInfo.binding.write(bindingInfo.value, to: &potential)
+                // Check every combination till something is found
+                for vars in possibleMatches {
+                    var potential: Matchable = concreteBinding.information.boxed.type.init()
+                    for (bindingInfo, value) in vars {
+                        bindingInfo.binding.write(value.boxed, for: bindingInfo.path, to: &potential)
+                    }
+                    if potential.match() {
+                        // Put everything back
+                        let t = takenVars.filter { path, _ in !vars.reduce(false) { x, v in let (b,_) = v ; return x || b.path == path } }
+                        for (path, values) in t {
+                            storage.put(values: values.map { v in v.boxed }, to: path)
                         }
-                        if  potential.match() {
-                            concreteBinding.information.boxed.onMatch(potential)
-                            return
-                        }
+                        concreteBinding.information.boxed.onMatch(potential)
+                        return
                     }
                 }
 
-                // If we are here, we found nothing. Store the binding
-                partials.append(newBinding)
+                // So this one didn't work out, return all vars
+                for (path, values) in takenVars {
+                    storage.put(values: values.map { v in v.boxed }, to: path)
+                }
+
+                // If we are here, we found nothing. Store the binding, if it's not already present
+                if (partials.filter { p in p.path == path}).isEmpty {
+                    partials.append(newBinding)
+                }
             }
 
             concreteBinding.information.boxed.partials[concreteBinding.binding.anyHashable] = partials

@@ -61,6 +61,19 @@ public class Storage: Storing {
         delegate?.didPutValue(storage: self, for: path, value: data)
     }
 
+    public func put(values: [AnyStorable], to path: Path) {
+        let compartment = self.compartment(for: path)
+
+        if compartment.localData[path.storable] == nil {
+            compartment.localData[path.storable] = []
+        }
+        compartment.localData[path.storable]!.append(contentsOf: values)
+
+        for data in values {
+            delegate?.didPutValue(storage: self, for: path, value: data)
+        }
+    }
+
     public func take<T>(from path: Path) -> T? where T: AnyStorable {
         let compartment = self.compartment(for: path)
 
@@ -81,6 +94,35 @@ public class Storage: Storing {
         }
 
         return found
+    }
+
+    private func _takeAll(from path: Path, typeFilter: (AnyStorable) -> Bool) -> [AnyStorable] {
+        let compartment = self.compartment(for: path)
+
+        guard compartment.localData[path.storable] != nil else { return [] }
+
+        let allFound = compartment.localData[path.storable]?.filter(typeFilter) ?? []
+        guard !allFound.isEmpty else { return [] }
+
+        compartment.localData[path.storable] = compartment.localData[path.storable]?.filter { v in !typeFilter(v) }
+
+        if compartment.localData[path.storable]?.count == 0 {
+            compartment.localData[path.storable] = nil
+        }
+
+        for d in allFound {
+            delegate?.didTakeValue(storage: self, for: path, value: d)
+        }
+
+        return allFound
+    }
+
+    public func takeAll(from path: Path) -> [AnyStorable] {
+        return _takeAll(from: path, typeFilter: {_ in true})
+    }
+
+    public func takeAll<T>(from path: Path) -> [T] where T : AnyStorable {
+        return _takeAll(from: path, typeFilter: {v in v as? T != nil}).map { v in v as! T }
     }
 }
 

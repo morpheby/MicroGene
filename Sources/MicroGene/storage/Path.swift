@@ -20,6 +20,12 @@ extension Path: Equatable {
     }
 }
 
+extension Path: Hashable {
+    public var hashValue: Int {
+        return hashCombine(lhv: storable.hashValue, rhv: compartment.hashValue)
+    }
+}
+
 public func / (lhv: CompartmentIndex, rhv: StorableId) -> Path {
     return Path(storable: rhv, compartment: lhv)
 }
