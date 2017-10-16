@@ -14,18 +14,18 @@ public class Matcher: Matching {
         var path: Path
     }
 
-    private struct MathableInformation {
+    private struct MatchableInformation {
         var type: Matchable.Type
         var onMatch: (Matchable) -> ()
         var partials: [AnyHashable: [BindingInformation]]
     }
 
     private struct ConcreteBinding {
-        var information: Box<MathableInformation>
+        var information: Box<MatchableInformation>
         var binding: AnyVariableBinding
     }
 
-    private var allMatchables: [ObjectIdentifier: Box<MathableInformation>]
+    private var allMatchables: [ObjectIdentifier: Box<MatchableInformation>]
     private var compiledExpressions: PathMatchingTree<ConcreteBinding> {
         if let c = _compiledExpressions { return c }
         else { compileExpressions() ; return _compiledExpressions! }
@@ -64,7 +64,10 @@ public class Matcher: Matching {
             let otherVars = concreteBinding.information.boxed.partials.filter { key, _ in key != concreteBinding.binding.anyHashable }
 
             // Proceed only if all variables have been set
-            if Set(otherVars.keys) == Set(concreteBinding.information.boxed.type.bindings.map { b in b.anyHashable }) {
+            if Set(otherVars.keys + [concreteBinding.binding.anyHashable]) == Set(concreteBinding.information.boxed.type.bindings.map { b in b.anyHashable }) {
+
+                // For cleanup, collect dead paths
+                var deadPaths: [AnyHashable: [Path]] = [:]
 
                 // Collect all combinations
                 var possibleMatches: [[(BindingInformation, Box<AnyStorable>)]] = [[]]
@@ -77,8 +80,8 @@ public class Matcher: Matching {
                             // Take everything
                             let t: [AnyStorable] = storage.takeAll(from: b.path)
                             if t.count == 0 {
-                                concreteBinding.information.boxed.partials[b.binding.anyHashable]?.remove(
-                                    at: (concreteBinding.information.boxed.partials[b.binding.anyHashable]?.index { v in v.path == b.path })!)
+                                if deadPaths[b.binding.anyHashable] == nil { deadPaths[b.binding.anyHashable] = [] }
+                                deadPaths[b.binding.anyHashable]?.append(b.path)
                             }
                             // Leave out only those that are of a usable type to use
                             let tTake = t.filter { v in b.binding.isCompatible(with: type(of: v)) } .map { v in Box(v) }
@@ -98,6 +101,18 @@ public class Matcher: Matching {
                     possibleMatches = new.map { a in a + [(newBinding, boxedValue)] }
                 }
 
+                // Cleanup dead paths
+                for (hashable, paths) in deadPaths {
+                    for path in paths {
+                        if let idx = (concreteBinding.information.boxed.partials[hashable]?.index { v in v.path == path }) {
+                            concreteBinding.information.boxed.partials[hashable]?.remove(at: idx)
+                        } else {
+                            fatalError("Binding appeared out of nowhere...")
+                        }
+                    }
+                }
+
+
                 // Check every combination till something is found
                 for vars in possibleMatches {
                     var potential: Matchable = concreteBinding.information.boxed.type.init()
@@ -106,7 +121,12 @@ public class Matcher: Matching {
                     }
                     if potential.match() {
                         // Put everything back
-                        let t = takenVars.filter { path, _ in !vars.reduce(false) { x, v in let (b,_) = v ; return x || b.path == path } }
+                        let t = takenVars.map { path, values in
+                            (path, values.filter { b in
+                                !vars.reduce(false) { x, v in let (_,v) = v ; return x || v === b }
+                            })
+                        }
+
                         for (path, values) in t {
                             storage.put(values: values.map { v in v.boxed }, to: path)
                         }
@@ -119,11 +139,11 @@ public class Matcher: Matching {
                 for (path, values) in takenVars {
                     storage.put(values: values.map { v in v.boxed }, to: path)
                 }
+            }
 
-                // If we are here, we found nothing. Store the binding, if it's not already present
-                if (partials.filter { p in p.path == path}).isEmpty {
-                    partials.append(newBinding)
-                }
+            // If we are here, we found nothing. Store the binding, if it's not already present
+            if (partials.filter { p in p.path == path}).isEmpty {
+                partials.append(newBinding)
             }
 
             concreteBinding.information.boxed.partials[concreteBinding.binding.anyHashable] = partials
@@ -144,7 +164,7 @@ public class Matcher: Matching {
             guard let typedM = m as? T else { fatalError("Internal error while restoring type information") }
             matchClosure(typedM)
         }
-        allMatchables[ObjectIdentifier(matchableType)] = Box(MathableInformation(type: matchableType, onMatch: typeErasedClodure, partials: [:]))
+        allMatchables[ObjectIdentifier(matchableType)] = Box(MatchableInformation(type: matchableType, onMatch: typeErasedClodure, partials: [:]))
     }
 
 }

@@ -96,7 +96,7 @@ class MatcherTests: XCTestCase {
         let takenTwo: String? = storage.take(from: /.testId1 / .stored2)
         XCTAssertNil(takenTwo, "Data should've been taken")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage){
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
             XCTFail("Match should've happened")
             return
         }
@@ -108,7 +108,7 @@ class MatcherTests: XCTestCase {
         XCTAssertNil(takenOne, "Data should've been taken")
 
         if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
-            storage.put(data: abc, to: /.testId1 / .stored2)
+            storage.put(data: cde, to: /.testId1 / .stored2)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
