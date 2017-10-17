@@ -41,8 +41,10 @@ private struct VariableBinding<Matcher, Variable>: AnyVariableBinding where Matc
     public var path: PathExpression
 
     func isCompatible(with type: AnyStorable.Type) -> Bool {
-        return type.isSelf(convertibleTo: Variable.self)
+        return typeChecker.accepts(type: type)
     }
+
+    private let typeChecker = TypeChecker(Variable.self)
 
     public var keyPath: WritableKeyPath<Matcher, Var<Variable>>
 

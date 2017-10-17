@@ -8,16 +8,9 @@
 import Foundation
 
 public protocol AnyStorable {
-    static func isSelf(convertibleTo valueType: AnyStorable.Type) -> Bool
 }
 
 public protocol Storable: AnyStorable {
-    typealias ActualType = Self
 }
 
-extension Storable {
-    static func isSelf(convertibleTo valueType: AnyStorable.Type) -> Bool {
-        return valueType as? ActualType.Type != nil
-    }
-}
 
