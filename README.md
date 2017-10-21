@@ -84,7 +84,7 @@ And I'm also a proponent of Actors and Reactive programming. So, here, out of al
 
 Coming soon… 
 
-For now, see [GeneTests,swift](/Tests/MicroGeneTests/GeneTests.swift) for a small (and totally unuseful and
+For now, see [GeneTests.swift](/Tests/MicroGeneTests/GeneTests.swift) for a small (and totally unuseful and
 totally wasteful) Fibonacci number calculation example.
 
 ## MicroGene ##
