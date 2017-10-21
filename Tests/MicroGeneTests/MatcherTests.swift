@@ -122,6 +122,6 @@ class MatcherTests: XCTestCase {
     }
 
     static var allTests = [
-        (),
+        ("testMatcherSimple", testMatcherSimple),
     ]
 }
