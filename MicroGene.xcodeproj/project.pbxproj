@@ -35,7 +35,7 @@
 		F66C0C061F9AF8DA000AA0F1 /* DefaultGenes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C0C051F9AF8DA000AA0F1 /* DefaultGenes.swift */; };
 		F66C0C081F9AF900000AA0F1 /* Ragistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C0C071F9AF900000AA0F1 /* Ragistration.swift */; };
 		F66C0C0A1F9B0829000AA0F1 /* Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C0C091F9B0829000AA0F1 /* Priority.swift */; };
-		F66C0C0C1F9B1B2A000AA0F1 /* GeneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C0C0B1F9B1B2A000AA0F1 /* GeneTest.swift */; };
+		F66C0C0C1F9B1B2A000AA0F1 /* GeneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66C0C0B1F9B1B2A000AA0F1 /* GeneTests.swift */; };
 		F66DFB1F1F9229A30048C225 /* AnyHashableConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66DFB1E1F9229A30048C225 /* AnyHashableConvertible.swift */; };
 		F66DFB211F9315540048C225 /* HashCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66DFB201F9315540048C225 /* HashCombine.swift */; };
 		F66DFB241F93286F0048C225 /* PathExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66DFB221F9327C00048C225 /* PathExpressionTests.swift */; };
@@ -92,7 +92,7 @@
 		F66C0C051F9AF8DA000AA0F1 /* DefaultGenes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGenes.swift; sourceTree = "<group>"; };
 		F66C0C071F9AF900000AA0F1 /* Ragistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ragistration.swift; sourceTree = "<group>"; };
 		F66C0C091F9B0829000AA0F1 /* Priority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Priority.swift; sourceTree = "<group>"; };
-		F66C0C0B1F9B1B2A000AA0F1 /* GeneTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneTest.swift; sourceTree = "<group>"; };
+		F66C0C0B1F9B1B2A000AA0F1 /* GeneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneTests.swift; sourceTree = "<group>"; };
 		F66DFB1E1F9229A30048C225 /* AnyHashableConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyHashableConvertible.swift; sourceTree = "<group>"; };
 		F66DFB201F9315540048C225 /* HashCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashCombine.swift; sourceTree = "<group>"; };
 		F66DFB221F9327C00048C225 /* PathExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathExpressionTests.swift; sourceTree = "<group>"; };
@@ -219,7 +219,7 @@
 				F6A87C6B1F90A4230022D46E /* StorageTests.swift */,
 				F66DFB221F9327C00048C225 /* PathExpressionTests.swift */,
 				F6ED5E011F94A80E00375D70 /* MatcherTests.swift */,
-				F66C0C0B1F9B1B2A000AA0F1 /* GeneTest.swift */,
+				F66C0C0B1F9B1B2A000AA0F1 /* GeneTests.swift */,
 			);
 			path = MicroGeneTests;
 			sourceTree = "<group>";
@@ -360,7 +360,7 @@
 				F6A87C6A1F909C4D0022D46E /* Definitions.swift in Sources */,
 				F66DFB241F93286F0048C225 /* PathExpressionTests.swift in Sources */,
 				F6A87C681F909BE70022D46E /* PathTests.swift in Sources */,
-				F66C0C0C1F9B1B2A000AA0F1 /* GeneTest.swift in Sources */,
+				F66C0C0C1F9B1B2A000AA0F1 /* GeneTests.swift in Sources */,
 				F6A87C6C1F90A4230022D46E /* StorageTests.swift in Sources */,
 				F6A87C641F9091390022D46E /* CompartmentIndexTests.swift in Sources */,
 			);
