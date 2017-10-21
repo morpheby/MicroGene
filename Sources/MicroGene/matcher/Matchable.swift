@@ -101,7 +101,7 @@ extension VariableBinding: AnyHashableConvertible {
 
 public protocol Matchable {
     static var bindings: [AnyVariableBinding] { get }
-    static var priority: Int { get }
+    static var priority: Priority { get }
 
     init()
 

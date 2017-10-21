@@ -96,6 +96,7 @@ public class Storage: Storing {
         return found
     }
 
+    // TODO: Remove double functions when Swift generics work the way they are supposed to
     private func _takeAll(from path: Path, typeFilter: (AnyStorable) -> Bool) -> [AnyStorable] {
         let compartment = self.compartment(for: path)
 
@@ -117,7 +118,7 @@ public class Storage: Storing {
         return allFound
     }
 
-    public func takeAll(from path: Path) -> [AnyStorable] {
+    public func takeAllUntyped(from path: Path) -> [AnyStorable] {
         return _takeAll(from: path, typeFilter: {_ in true})
     }
 

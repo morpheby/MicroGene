@@ -75,17 +75,17 @@ class MatcherTests: XCTestCase {
 
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage) {
+        if !matcher.match(value: abc, at: /.testId1 / .stored1, in: storage) {
             storage.put(data: abc, to: /.testId1 / .stored1)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage) {
+        if !matcher.match(value: abc, at: /.testId1 / .stored1, in: storage) {
             storage.put(data: abc, to: /.testId1 / .stored1)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, in: storage) {
             XCTFail("Match should've happened")
             return
         }
@@ -96,7 +96,7 @@ class MatcherTests: XCTestCase {
         let takenTwo: String? = storage.take(from: /.testId1 / .stored2)
         XCTAssertNil(takenTwo, "Data should've been taken")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, in: storage) {
             XCTFail("Match should've happened")
             return
         }
@@ -107,12 +107,12 @@ class MatcherTests: XCTestCase {
         let takenOne: String? = storage.take(from: /.testId1 / .stored1)
         XCTAssertNil(takenOne, "Data should've been taken")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, storage: storage) {
+        if !matcher.match(value: cde, at: /.testId1 / .stored2, in: storage) {
             storage.put(data: cde, to: /.testId1 / .stored2)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: abc, at: /.testId1 / .stored1, storage: storage) {
+        if !matcher.match(value: abc, at: /.testId1 / .stored1, in: storage) {
             XCTFail("Match should've happened")
             return
         }

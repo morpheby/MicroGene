@@ -40,7 +40,7 @@ public class Matcher: Matching {
     /// Check if a new value `value` at `path` can match any of the registered `Matchable`a.
     /// If it can, it returns `true`, and the value is already taken (you shouldn't save it into storage then).
     /// It it can't, it returns `false` and you should store the value to the storage.
-    public func match(value: AnyStorable, at path: Path, storage: Storing) -> Bool {
+    public func match(value: AnyStorable, at path: Path, in storage: Storing) -> Bool {
         let candidateList = compiledExpressions.allExpressions(satisfying: path).lazy
             .filter { c in c.binding.isCompatible(with: type(of: value)) }
             .sorted { (lhv, rhv) -> Bool in
@@ -78,7 +78,7 @@ public class Matcher: Matching {
                     let bindVars: [(BindingInformation, Box<AnyStorable>)] =
                         bindings.flatMap { (b: BindingInformation) -> [(BindingInformation, Box<AnyStorable>)] in
                             // Take everything
-                            let t: [AnyStorable] = storage.takeAll(from: b.path)
+                            let t: [AnyStorable] = storage.takeAllUntyped(from: b.path)
                             if t.count == 0 {
                                 if deadPaths[b.binding.anyHashable] == nil { deadPaths[b.binding.anyHashable] = [] }
                                 deadPaths[b.binding.anyHashable]?.append(b.path)
@@ -158,13 +158,22 @@ public class Matcher: Matching {
         _compiledExpressions = PathMatchingTree(expressions: allExpressions)
     }
 
-    public func register<T>(_ matchableType: T.Type, onMatch matchClosure: @escaping (T) -> ()) where T: Matchable {
+    // TODO: Remove double functions when Swift generics work the way they are supposed to
+    public func _register(_ matchableType: Matchable.Type, onMatch matchClosure: @escaping (Matchable) -> ()) {
         _compiledExpressions = nil
-        let typeErasedClodure = { (m: Matchable) -> () in
+        allMatchables[ObjectIdentifier(matchableType)] = Box(MatchableInformation(type: matchableType, onMatch: matchClosure, partials: [:]))
+    }
+
+    public func register<T>(_ matchableType: T.Type, onMatch matchClosure: @escaping (T) -> ()) where T: Matchable {
+        let typeErasedClosure = { (m: Matchable) -> () in
             guard let typedM = m as? T else { fatalError("Internal error while restoring type information") }
             matchClosure(typedM)
         }
-        allMatchables[ObjectIdentifier(matchableType)] = Box(MatchableInformation(type: matchableType, onMatch: typeErasedClodure, partials: [:]))
+        _register(matchableType, onMatch: typeErasedClosure)
+    }
+
+    public func registerUntyped(_ matchableType: Matchable.Type, onMatch matchClosure: @escaping (Matchable) -> ()) {
+        _register(matchableType, onMatch: matchClosure)
     }
 
 }

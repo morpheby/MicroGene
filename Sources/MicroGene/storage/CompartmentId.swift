@@ -1,13 +1,13 @@
 //
-//  StorableId.swift
+//  CompartmentId.swift
 //  MicroGene
 //
-//  Created by Ilya Mikhaltsou on 10/12/17.
+//  Created by Ilya Mikhaltsou on 10/20/17.
 //
 
 import Foundation
 
-public struct StorableId: RawRepresentable {
+public struct CompartmentId: RawRepresentable {
     public typealias RawValue = String
 
     public var name: String
@@ -16,30 +16,30 @@ public struct StorableId: RawRepresentable {
         self.name = name
     }
 
-    public init?(rawValue: StorableId.RawValue) {
+    public init?(rawValue: CompartmentId.RawValue) {
         self.init(name: rawValue)
     }
 
-    public var rawValue: StorableId.RawValue {
+    public var rawValue: CompartmentId.RawValue {
         return name
     }
 }
 
-extension StorableId: Equatable {
-    public static func == (lhv: StorableId, rhv: StorableId) -> Bool {
+extension CompartmentId: Equatable {
+    public static func == (lhv: CompartmentId, rhv: CompartmentId) -> Bool {
         guard lhv.name == rhv.name else { return false }
 
         return true
     }
 }
 
-extension StorableId: Hashable {
+extension CompartmentId: Hashable {
     public var hashValue: Int {
         return name.hashValue
     }
 }
 
-extension StorableId: CustomStringConvertible {
+extension CompartmentId: CustomStringConvertible {
     public var description: String {
         return self.name
     }

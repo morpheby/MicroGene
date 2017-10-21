@@ -7,22 +7,6 @@
 
 import Foundation
 
-public struct CompartmentId: RawRepresentable {
-    public typealias RawValue = String
-
-    public var rawValue: String
-
-    public init?(rawValue: CompartmentId.RawValue) {
-        self.rawValue = rawValue
-    }
-}
-
-extension CompartmentId: Hashable {
-    public var hashValue: Int {
-        return rawValue.hashValue
-    }
-}
-
 public enum CompartmentIndex {
     case root
     indirect case node(id: CompartmentId, parent: CompartmentIndex)
@@ -63,12 +47,6 @@ extension CompartmentId {
 extension CompartmentIndex {
     public static func / (lhv: CompartmentIndex, rhv: CompartmentId) -> CompartmentIndex {
         return .node(id: rhv, parent: lhv)
-    }
-}
-
-extension CompartmentId: CustomStringConvertible {
-    public var description: String {
-        return self.rawValue
     }
 }
 
