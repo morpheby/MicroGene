@@ -20,9 +20,13 @@ public class System {
     }
 
     public init(storage: Storing, matcher: Matching, executor: Executing) {
+        let _ = allGenesRegistration
+
         self.storage = storage
         self.matcher = matcher
         self.executor = executor
+
+        self.restoreDelayed()
     }
 
     private func restoreDelayed() {

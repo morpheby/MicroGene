@@ -98,8 +98,9 @@ public class Matcher: Matching {
                             new.append(a + [b])
                         }
                     }
-                    possibleMatches = new.map { a in a + [(newBinding, boxedValue)] }
+                    possibleMatches = new
                 }
+                possibleMatches = possibleMatches.map { a in a + [(newBinding, boxedValue)] }
 
                 // Cleanup dead paths
                 for (hashable, paths) in deadPaths {
@@ -117,7 +118,7 @@ public class Matcher: Matching {
                 for vars in possibleMatches {
                     var potential: Matchable = concreteBinding.information.boxed.type.init()
                     for (bindingInfo, value) in vars {
-                        bindingInfo.binding.write(value.boxed, for: bindingInfo.path, to: &potential)
+                        bindingInfo.binding.writeUntyped(value.boxed, for: bindingInfo.path, to: &potential)
                     }
                     if potential.match() {
                         // Put everything back

@@ -7,6 +7,11 @@
 
 import Foundation
 
+internal let allGenesRegistration = [
+    registerGene(Startup.self),
+    registerGene(Shutdown.self),
+]
+
 open class Startup: Gene {
     public static let bindings: [AnyVariableBinding] = [
         !.microgeneEntry <> \Startup.entry
@@ -48,4 +53,3 @@ public class Shutdown: Gene, RequiresSystem {
         return []
     }
 }
-

@@ -37,7 +37,7 @@ class MatcherTests: XCTestCase {
             /.any / !.stored2 <> \Match1.test2,
         ]
 
-        static let priority: Int = 100
+        static let priority = Priority.normal
 
         var test1 = Var(String.self)
         var test2 = Var(String.self)

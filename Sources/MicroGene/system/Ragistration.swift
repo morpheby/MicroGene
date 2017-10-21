@@ -7,8 +7,12 @@
 
 import Foundation
 
-public func registerGene<T>(_ type: T.Type) where T: Gene {
+public struct _None { }
+
+@discardableResult
+public func registerGene<T>(_ type: T.Type) -> _None where T: Gene {
     DelayedRegistration.shared.genes.append(type)
+    return _None()
 }
 
 internal class DelayedRegistration {

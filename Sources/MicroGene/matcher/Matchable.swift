@@ -8,10 +8,14 @@
 import Foundation
 
 public protocol AnyVariableBinding: AnyHashableConvertible {
+
     var path: PathExpression { get }
+
     func isCompatible(with type: AnyStorable.Type) -> Bool
+
+    // TODO: Remove double functions when Swift generics work the way they are supposed to
     func write<T,U>(_ value: U, for path: Path, to holder: inout T) where T: Matchable, U: AnyStorable
-    func write(_ value: AnyStorable, for path: Path, to holder: inout Matchable)
+    func writeUntyped(_ value: AnyStorable, for path: Path, to holder: inout Matchable)
 }
 
 public struct Var<Wrapped> where Wrapped: AnyStorable {
@@ -48,9 +52,12 @@ private struct VariableBinding<Matcher, Variable>: AnyVariableBinding where Matc
 
     public var keyPath: WritableKeyPath<Matcher, Var<Variable>>
 
+    // TODO: Remove double functions when Swift generics work the way they are supposed to
     private func _write(_ value: Variable, for path: Path, to holder: inout Matcher) {
-        holder[keyPath: keyPath]._path = path
-        holder[keyPath: keyPath]._value = value
+        let pathKeyPath: WritableKeyPath<Matcher, ImplicitlyUnwrappedOptional<Path>> = keyPath.appending(path: \Var<Variable>._path)
+        let valueKeyPath: WritableKeyPath<Matcher, ImplicitlyUnwrappedOptional<Variable>> = keyPath.appending(path: \Var<Variable>._value)
+        holder[keyPath: pathKeyPath] = path
+        holder[keyPath: valueKeyPath] = value
     }
 
     public func write<T,U>(_ value: U, for path: Path, to holder: inout T) where T: Matchable, U: AnyStorable {
@@ -64,7 +71,7 @@ private struct VariableBinding<Matcher, Variable>: AnyVariableBinding where Matc
         holder = matcher as! T
     }
 
-    public func write(_ value: AnyStorable, for path: Path, to holder: inout Matchable) {
+    public func writeUntyped(_ value: AnyStorable, for path: Path, to holder: inout Matchable) {
         guard var matcher = holder as? Matcher else { preconditionFailure("Invalid holder supplied to VariableBinding") }
         guard let variableValue = value as? Variable else { preconditionFailure("Invalid value supplied to VariableBinding")}
 
