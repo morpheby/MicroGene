@@ -18,7 +18,7 @@ public struct MarkerId {
     public var name: String
 
     public init(name: String) {
-        self.name = name
+        self.name = name + locallyUniqueId()
     }
 }
 
@@ -27,7 +27,7 @@ extension MarkerId: RawRepresentable {
     public typealias RawValue = String
 
     public init?(rawValue: MarkerId.RawValue) {
-        self.init(name: rawValue)
+        self.name = rawValue
     }
 
     public var rawValue: String {
