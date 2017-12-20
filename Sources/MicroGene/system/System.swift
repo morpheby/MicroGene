@@ -40,7 +40,7 @@ public class System {
         matcher.register(type) { gene in
             let result = self.executor.execute(gene)
             for output in result {
-                self.put(value: output.universalValue, path: output.path)
+                self.putUntyped(value: output.universalValue, state: output.state, path: output.path)
             }
         }
     }
@@ -55,7 +55,7 @@ public class System {
             let result = self.executor.execute(gene)
             self.executor.untie {
                 for output in result {
-                    self.put(value: output.universalValue, path: output.path)
+                    self.putUntyped(value: output.universalValue, state: output.state, path: output.path)
                 }
             }
         }
@@ -84,12 +84,29 @@ public class System {
         }
     }
 
-    public func put(value: AnyStorable, path: Path) {
-        if !matcher.match(value: value, at: path, in: storage) {
-            storage.put(data: value, to: path)
+    // TODO: Remove double functions when Swift generics work the way they are supposed to
+    private func _put(completeValue: AnyCompleteValue, path: Path) {
+        if !matcher.match(value: completeValue, at: path, in: storage) {
+            storage.put(data: completeValue, to: path)
         } else {
             // Ignore, since the execution is performed through the closure supplied earlier
         }
+    }
+
+    public func putUntyped(value: AnyStorable, state: StorableState, path: Path) {
+        self._put(completeValue: AnyCompleteValueConcrete(state: state, value: value), path: path)
+    }
+
+    public func put<T>(value: T, state: StorableState, path: Path) where T: AnyStorable {
+        self._put(completeValue: CompleteValue(state: state, value: value), path: path)
+    }
+
+    public func putUntyped(value: AnyStorable, path: Path) {
+        self.putUntyped(value: value, state: StorableState(), path: path)
+    }
+
+    public func put<T>(value: T, path: Path) where T: AnyStorable {
+        self.put(value: value, state: StorableState(), path: path)
     }
 
     internal func terminate() {

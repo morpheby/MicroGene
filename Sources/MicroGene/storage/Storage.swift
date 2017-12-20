@@ -12,7 +12,7 @@ public class Storage: Storing {
     private class StorageCompartment {
         let index: CompartmentIndex
         var storage: [CompartmentIndex: StorageCompartment] = [:]
-        var localData: [StorableId: [AnyStorable]] = [:]
+        var localData: [StorableId: [AnyCompleteValue]] = [:]
 
         init(index: CompartmentIndex) {
             self.index = index
@@ -50,7 +50,7 @@ public class Storage: Storing {
         return currentCompartment
     }
 
-    public func put(data: AnyStorable, to path: Path) {
+    public func put(data: AnyCompleteValue, to path: Path) {
         let compartment = self.compartment(for: path)
 
         if compartment.localData[path.storable] == nil {
@@ -61,7 +61,7 @@ public class Storage: Storing {
         delegate?.didPutValue(storage: self, for: path, value: data)
     }
 
-    public func put(values: [AnyStorable], to path: Path) {
+    public func put(values: [AnyCompleteValue], to path: Path) {
         let compartment = self.compartment(for: path)
 
         if compartment.localData[path.storable] == nil {
@@ -74,14 +74,14 @@ public class Storage: Storing {
         }
     }
 
-    public func take<T>(from path: Path) -> T? where T: AnyStorable {
+    public func take<T>(from path: Path) -> CompleteValue<T>? where T: AnyStorable {
         let compartment = self.compartment(for: path)
 
-        var found: T? = nil
+        var found: CompleteValue<T>? = nil
 
         if let dataView = compartment.localData[path.storable] {
-            if let dataIdx = (dataView.index { v in v as? T != nil }) {
-                found = (compartment.localData[path.storable]?.remove(at: dataIdx) as! T)
+            if let dataIdx = (dataView.index { v in v.typed() as CompleteValue<T>? != nil }) {
+                found = (compartment.localData[path.storable]?.remove(at: dataIdx).typed() as CompleteValue<T>?)!
             }
         }
 
@@ -97,7 +97,7 @@ public class Storage: Storing {
     }
 
     // TODO: Remove double functions when Swift generics work the way they are supposed to
-    private func _takeAll(from path: Path, typeFilter: (AnyStorable) -> Bool) -> [AnyStorable] {
+    private func _takeAll(from path: Path, typeFilter: (AnyCompleteValue) -> Bool) -> [AnyCompleteValue] {
         let compartment = self.compartment(for: path)
 
         guard compartment.localData[path.storable] != nil else { return [] }
@@ -118,19 +118,19 @@ public class Storage: Storing {
         return allFound
     }
 
-    public func takeAllUntyped(from path: Path) -> [AnyStorable] {
+    public func takeAllUntyped(from path: Path) -> [AnyCompleteValue] {
         return _takeAll(from: path, typeFilter: {_ in true})
     }
 
-    public func takeAll<T>(from path: Path) -> [T] where T : AnyStorable {
-        return _takeAll(from: path, typeFilter: {v in v as? T != nil}).map { v in v as! T }
+    public func takeAll<T>(from path: Path) -> [CompleteValue<T>] where T : AnyStorable {
+        return _takeAll(from: path, typeFilter: {v in v.typed() as CompleteValue<T>? != nil}).map { v in (v.typed() as CompleteValue<T>?)! }
     }
 }
 
 public protocol StorageDelegate {
     /// Invoked right after adding value to the compartment.
-    func didPutValue(storage: Storage, for path: Path, value: AnyStorable)
-    func didTakeValue(storage: Storage, for path: Path, value: AnyStorable)
+    func didPutValue(storage: Storage, for path: Path, value: AnyCompleteValue)
+    func didTakeValue(storage: Storage, for path: Path, value: AnyCompleteValue)
 }
 
 

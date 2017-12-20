@@ -75,17 +75,17 @@ class MatcherTests: XCTestCase {
 
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: abc, at: /.testId1 / .stored1, in: storage) {
-            storage.put(data: abc, to: /.testId1 / .stored1)
+        if !matcher.match(value: CompleteValue(abc), at: /.testId1 / .stored1, in: storage) {
+            storage.put(data: CompleteValue(abc), to: /.testId1 / .stored1)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: abc, at: /.testId1 / .stored1, in: storage) {
-            storage.put(data: abc, to: /.testId1 / .stored1)
+        if !matcher.match(value: CompleteValue(abc), at: /.testId1 / .stored1, in: storage) {
+            storage.put(data: CompleteValue(abc), to: /.testId1 / .stored1)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, in: storage) {
+        if !matcher.match(value: CompleteValue(cde), at: /.testId1 / .stored2, in: storage) {
             XCTFail("Match should've happened")
             return
         }
@@ -93,10 +93,10 @@ class MatcherTests: XCTestCase {
 
         matched = false
 
-        let takenTwo: String? = storage.take(from: /.testId1 / .stored2)
+        let takenTwo: String? = storage.take(from: /.testId1 / .stored2)?.value
         XCTAssertNil(takenTwo, "Data should've been taken")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, in: storage) {
+        if !matcher.match(value: CompleteValue(cde), at: /.testId1 / .stored2, in: storage) {
             XCTFail("Match should've happened")
             return
         }
@@ -104,15 +104,15 @@ class MatcherTests: XCTestCase {
 
         matched = false
 
-        let takenOne: String? = storage.take(from: /.testId1 / .stored1)
+        let takenOne: String? = storage.take(from: /.testId1 / .stored1)?.value
         XCTAssertNil(takenOne, "Data should've been taken")
 
-        if !matcher.match(value: cde, at: /.testId1 / .stored2, in: storage) {
-            storage.put(data: cde, to: /.testId1 / .stored2)
+        if !matcher.match(value: CompleteValue(cde), at: /.testId1 / .stored2, in: storage) {
+            storage.put(data: CompleteValue(cde), to: /.testId1 / .stored2)
         } else { XCTFail("Match shouldn't have happened") }
         XCTAssertFalse(matched, "Too early")
 
-        if !matcher.match(value: abc, at: /.testId1 / .stored1, in: storage) {
+        if !matcher.match(value: CompleteValue(abc), at: /.testId1 / .stored1, in: storage) {
             XCTFail("Match should've happened")
             return
         }

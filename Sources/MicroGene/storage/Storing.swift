@@ -8,13 +8,13 @@
 import Foundation
 
 public protocol Storing {
-    func put(data: AnyStorable, to: Path)
+    func put(data: AnyCompleteValue, to: Path)
 
-    func put(values: [AnyStorable], to: Path)
+    func put(values: [AnyCompleteValue], to: Path)
 
-    func take<T>(from: Path) -> T? where T: AnyStorable
+    func take<T>(from: Path) -> CompleteValue<T>? where T: AnyStorable
 
     // TODO: Remove double functions when Swift generics work the way they are supposed to
-    func takeAll<T>(from: Path) -> [T] where T: AnyStorable
-    func takeAllUntyped(from: Path) -> [AnyStorable]
+    func takeAll<T>(from: Path) -> [CompleteValue<T>] where T: AnyStorable
+    func takeAllUntyped(from: Path) -> [AnyCompleteValue]
 }

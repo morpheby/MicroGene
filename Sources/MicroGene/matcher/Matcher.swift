@@ -40,9 +40,9 @@ public class Matcher: Matching {
     /// Check if a new value `value` at `path` can match any of the registered `Matchable`a.
     /// If it can, it returns `true`, and the value is already taken (you shouldn't save it into storage then).
     /// It it can't, it returns `false` and you should store the value to the storage.
-    public func match(value: AnyStorable, at path: Path, in storage: Storing) -> Bool {
+    public func match(value: AnyCompleteValue, at path: Path, in storage: Storing) -> Bool {
         let candidateList = compiledExpressions.allExpressions(satisfying: path).lazy
-            .filter { c in c.binding.isCompatible(with: type(of: value)) }
+            .filter { c in c.binding.isCompatible(with: type(of: value.anyValue)) }
             .sorted { (lhv, rhv) -> Bool in
                 if lhv.information.boxed.type.priority == rhv.information.boxed.type.priority {
                     return lhv.information.boxed.type.bindings.count > rhv.information.boxed.type.bindings.count
@@ -70,26 +70,26 @@ public class Matcher: Matching {
                 var deadPaths: [AnyHashable: [Path]] = [:]
 
                 // Collect all combinations
-                var possibleMatches: [[(BindingInformation, Box<AnyStorable>)]] = [[]]
-                var takenVars: [Path: [Box<AnyStorable>]] = [:]
+                var possibleMatches: [[(BindingInformation, Box<AnyCompleteValue>)]] = [[]]
+                var takenVars: [Path: [Box<AnyCompleteValue>]] = [:]
                 for (_, bindings) in otherVars {
                     // Compute cartesian product
-                    var new: [[(BindingInformation, Box<AnyStorable>)]] = []
-                    let bindVars: [(BindingInformation, Box<AnyStorable>)] =
-                        bindings.flatMap { (b: BindingInformation) -> [(BindingInformation, Box<AnyStorable>)] in
+                    var new: [[(BindingInformation, Box<AnyCompleteValue>)]] = []
+                    let bindVars: [(BindingInformation, Box<AnyCompleteValue>)] =
+                        bindings.flatMap { (b: BindingInformation) -> [(BindingInformation, Box<AnyCompleteValue>)] in
                             // Take everything
-                            let t: [AnyStorable] = storage.takeAllUntyped(from: b.path)
+                            let t: [AnyCompleteValue] = storage.takeAllUntyped(from: b.path)
                             if t.count == 0 {
                                 if deadPaths[b.binding.anyHashable] == nil { deadPaths[b.binding.anyHashable] = [] }
                                 deadPaths[b.binding.anyHashable]?.append(b.path)
                             }
                             // Leave out only those that are of a usable type to use
-                            let tTake = t.filter { v in b.binding.isCompatible(with: type(of: v)) } .map { v in Box(v) }
-                            let tReturn = t.filter { v in !b.binding.isCompatible(with: type(of: v)) }
+                            let tTake = t.filter { v in b.binding.isCompatible(with: type(of: v.anyValue)) } .map { v in Box(v) }
+                            let tReturn = t.filter { v in !b.binding.isCompatible(with: type(of: v.anyValue)) }
 
                             takenVars[b.path] = tTake
                             storage.put(values: tReturn, to: b.path)
-                            return tTake.map {(x: Box<AnyStorable>) -> (BindingInformation,Box<AnyStorable>) in
+                            return tTake.map {(x: Box<AnyCompleteValue>) -> (BindingInformation,Box<AnyCompleteValue>) in
                                 return (b,x)
                             }
                         }

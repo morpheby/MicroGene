@@ -16,26 +16,26 @@ class StorageTests: XCTestCase {
 
         let data = "ABC"
 
-        let pretakenData: String? = storage.take(from: /.testId1 / .testId1)
+        let pretakenData: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertNil(pretakenData, "Storage.take should return nil when data is not present at path")
 
-        storage.put(data: data, to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
 
-        let takenData: String? = storage.take(from: /.testId1 / .testId1)
+        let takenData: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertEqual(data, takenData, "Storage.take should return exactly what was Storage.put at same path")
 
-        let retakenData: String? = storage.take(from: /.testId1 / .testId1)
+        let retakenData: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertNil(retakenData, "Storage.take should return nil when data was already Storage.taken")
 
-        storage.put(data: data, to: /.testId1 / .testId1)
-        let takenDataOne: String? = storage.take(from: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
+        let takenDataOne: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertEqual(data, takenDataOne, "Storage.take should return exactly what was Storage.put at same path")
 
-        storage.put(data: data, to: /.testId1 / .testId1)
-        let takenDataTwo: String? = storage.take(from: /.testId1 / .testId2)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
+        let takenDataTwo: String? = storage.take(from: /.testId1 / .testId2)?.value
         XCTAssertNil(takenDataTwo, "Compartments should store different Storable's separately")
 
-        let takenDataThree: String? = storage.take(from: /.testId2 / .testId1)
+        let takenDataThree: String? = storage.take(from: /.testId2 / .testId1)?.value
         XCTAssertNil(takenDataThree, "Compartments should be separate")
     }
 
@@ -44,32 +44,32 @@ class StorageTests: XCTestCase {
 
         let data = "ABC"
 
-        let pretakenData: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let pretakenData: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)?.value
         XCTAssertNil(pretakenData, "Storage.take should return nil when data is not present at path")
 
-        storage.put(data: data, to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
 
-        let takenData: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let takenData: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)?.value
         XCTAssertEqual(data, takenData, "Storage.take should return exactly what was Storage.put at same path")
 
-        let retakenData: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let retakenData: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)?.value
         XCTAssertNil(retakenData, "Storage.take should return nil when data was already Storage.taken")
 
-        storage.put(data: data, to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
-        let takenDataOne: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let takenDataOne: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)?.value
         XCTAssertEqual(data, takenDataOne, "Storage.take should return exactly what was Storage.put at same path")
 
-        storage.put(data: data, to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
-        let takenDataTwo: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored2)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId2 / .testId3 / .testId4 / .stored1)
+        let takenDataTwo: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId4 / .stored2)?.value
         XCTAssertNil(takenDataTwo, "Compartments should store different Storable's separately")
 
-        let takenDataThree: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId1 / .stored1)
+        let takenDataThree: String? = storage.take(from: /.testId1 / .testId2 / .testId3 / .testId1 / .stored1)?.value
         XCTAssertNil(takenDataThree, "Compartments should be separate")
 
-        let takenDataFour: String? = storage.take(from: /.testId1 / .testId4 / .testId3 / .testId4 / .stored1)
+        let takenDataFour: String? = storage.take(from: /.testId1 / .testId4 / .testId3 / .testId4 / .stored1)?.value
         XCTAssertNil(takenDataFour, "Compartments should be separate")
 
-        let takenDataFive: String? = storage.take(from: /.testId3 / .testId2 / .testId3 / .testId4 / .stored1)
+        let takenDataFive: String? = storage.take(from: /.testId3 / .testId2 / .testId3 / .testId4 / .stored1)?.value
         XCTAssertNil(takenDataFive, "Compartments should be separate")
     }
 
@@ -82,12 +82,12 @@ class StorageTests: XCTestCase {
             self.onTake = onTake
         }
 
-        func didPutValue(storage: Storage, for path: Path, value: AnyStorable) {
-            self.onPut(storage, path, value)
+        func didPutValue(storage: Storage, for path: Path, value: AnyCompleteValue) {
+            self.onPut(storage, path, value.anyValue)
         }
 
-        func didTakeValue(storage: Storage, for path: Path, value: AnyStorable) {
-            self.onTake(storage, path, value)
+        func didTakeValue(storage: Storage, for path: Path, value: AnyCompleteValue) {
+            self.onTake(storage, path, value.anyValue)
         }
     }
 
@@ -114,49 +114,49 @@ class StorageTests: XCTestCase {
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertFalse(didTake, "Storage.take should not call didTake when no value was taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
 
         didTake = false
         didPut = false
-        storage.put(data: data, to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
         XCTAssertTrue(didPut, "Storage.put should call didPut when value was put")
         XCTAssertFalse(didTake, "Storage.put should not call didTake")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertTrue(didTake, "Storage.take should call didTake when value was taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertFalse(didTake, "Storage.take should not call didTake when value was already taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
 
         didTake = false
         didPut = false
-        storage.put(data: data, to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
         XCTAssertTrue(didPut, "Storage.put should call didPut when value was put")
         XCTAssertFalse(didTake, "Storage.put should not call didTake")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertTrue(didTake, "Storage.take should call didTake when value was taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId2)
+        let _: String? = storage.take(from: /.testId1 / .testId2)?.value
         XCTAssertFalse(didTake, "Storage.take should not call didTake when no value was taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId2 / .testId1)
+        let _: String? = storage.take(from: /.testId2 / .testId1)?.value
         XCTAssertFalse(didTake, "Storage.take should not call didTake when no value was taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
     }
@@ -176,7 +176,7 @@ class StorageTests: XCTestCase {
             XCTAssert(p == path, "Storage.put should call delegate with correct path")
             XCTAssertEqual(s as? String, data, "Storage.put should call delegate with correct value")
 
-            let takenData: String? = t.take(from: p)
+            let takenData: String? = t.take(from: p)?.value
             XCTAssertEqual(data, takenData, "Storage.take should return exactly what was Storage.put at same path")
         }, onTake: { (t, p, s) in
             didTake = true
@@ -187,13 +187,13 @@ class StorageTests: XCTestCase {
 
         didTake = false
         didPut = false
-        storage.put(data: data, to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
         XCTAssertTrue(didPut, "Storage.put should call didPut when value was put")
         XCTAssertTrue(didTake, "Storage.take should have succeeded")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertFalse(didTake, "Storage.take should not call didTake when value was already taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
     }
@@ -218,18 +218,18 @@ class StorageTests: XCTestCase {
             XCTAssert(p == path, "Storage.take should call delegate with correct path")
             XCTAssertEqual(s as? String, data, "Storage.take should call delegate with correct value")
 
-            t.put(data: data, to: p)
+            t.put(data: CompleteValue(data), to: p)
         })
 
         didTake = false
         didPut = false
-        storage.put(data: data, to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(data), to: /.testId1 / .testId1)
         XCTAssertTrue(didPut, "Storage.put should call didPut when value was put")
         XCTAssertFalse(didTake, "Storage.put should not call didTake")
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertTrue(didTake, "Storage.take should call didTake when value was taken")
         XCTAssertTrue(didPut, "Storage.put should have succeeded")
 
@@ -247,7 +247,7 @@ class StorageTests: XCTestCase {
 
         didTake = false
         didPut = false
-        let _: String? = storage.take(from: /.testId1 / .testId1)
+        let _: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertTrue(didTake, "Storage.take should call didTake when value was taken")
         XCTAssertFalse(didPut, "Storage.take should not call didPut")
     }
@@ -259,23 +259,23 @@ class StorageTests: XCTestCase {
         let dataTwo = "ABCD"
         let dataThree = 5
 
-        let pretakenData: String? = storage.take(from: /.testId1 / .testId1)
+        let pretakenData: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertNil(pretakenData, "Storage.take should return nil when data is not present at path")
 
-        storage.put(data: dataOne, to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(dataOne), to: /.testId1 / .testId1)
 
-        let takenData: String? = storage.take(from: /.testId1 / .testId1)
+        let takenData: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertEqual(dataOne, takenData, "Storage.take should return exactly what was Storage.put at same path")
 
-        let retakenData: String? = storage.take(from: /.testId1 / .testId1)
+        let retakenData: String? = storage.take(from: /.testId1 / .testId1)?.value
         XCTAssertNil(retakenData, "Storage.take should return nil when data was already Storage.taken")
 
-        storage.put(data: dataOne, to: /.testId1 / .testId1)
-        storage.put(data: dataTwo, to: /.testId1 / .testId1)
-        storage.put(data: dataThree, to: /.testId1 / .testId1)
-        let takenDataOne: String? = storage.take(from: /.testId1 / .testId1)
-        let takenDataTwo: String? = storage.take(from: /.testId1 / .testId1)
-        let takenDataThree: Int? = storage.take(from: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(dataOne), to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(dataTwo), to: /.testId1 / .testId1)
+        storage.put(data: CompleteValue(dataThree), to: /.testId1 / .testId1)
+        let takenDataOne: String? = storage.take(from: /.testId1 / .testId1)?.value
+        let takenDataTwo: String? = storage.take(from: /.testId1 / .testId1)?.value
+        let takenDataThree: Int? = storage.take(from: /.testId1 / .testId1)?.value
 
         let allData = Set([AnyHashable(dataOne), AnyHashable(dataTwo), AnyHashable(dataThree)])
         let allTakenData = Set([takenDataOne.map{AnyHashable($0)}, takenDataTwo.map{AnyHashable($0)}, takenDataThree.map{AnyHashable($0)}].flatten())
