@@ -11,7 +11,7 @@ public protocol Gene: Matchable, Executable {
 }
 
 public protocol RequiresStartupInitialization {
-    static func startupHook()
+    static func startupHook(store: Storing)
 }
 
 internal protocol RequiresSystem {

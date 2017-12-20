@@ -44,7 +44,7 @@ public class System {
             }
         }
         if let t = type as? RequiresStartupInitialization.Type {
-            t.startupHook()
+            t.startupHook(store: self.storage)
         }
     }
 
@@ -63,7 +63,7 @@ public class System {
             }
         }
         if let t = type as? RequiresStartupInitialization.Type {
-            t.startupHook()
+            t.startupHook(store: self.storage)
         }
     }
 
