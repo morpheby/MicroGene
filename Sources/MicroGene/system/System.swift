@@ -43,6 +43,9 @@ public class System {
                 self.putUntyped(value: output.universalValue, state: output.state, path: output.path)
             }
         }
+        if let t = type as? RequiresStartupInitialization.Type {
+            t.startupHook()
+        }
     }
 
     public func registerUntyped(_ type: Gene.Type) {
@@ -58,6 +61,9 @@ public class System {
                     self.putUntyped(value: output.universalValue, state: output.state, path: output.path)
                 }
             }
+        }
+        if let t = type as? RequiresStartupInitialization.Type {
+            t.startupHook()
         }
     }
 
