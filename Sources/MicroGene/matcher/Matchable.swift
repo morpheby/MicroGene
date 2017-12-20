@@ -20,23 +20,28 @@ public protocol AnyVariableBinding: AnyHashableConvertible {
 
 public struct Var<Wrapped> where Wrapped: AnyStorable {
     public var value: Wrapped {
-        get { return _value }
-        set { _value = newValue }
+        get { return _completeValue.value }
+        set { _completeValue.value = newValue }
     }
 
     public var state: StorableState {
-        get { return _state }
+        get { return _completeValue.state }
+        set { _completeValue.state = state }
     }
 
     public var path: Path {
         get { return _path }
     }
 
+    public var completeValue: CompleteValue<Wrapped> {
+        get { return _completeValue }
+        set { _completeValue = newValue }
+    }
+
     public init() { }
     public init(_: Wrapped.Type) { }
 
-    fileprivate var _value: Wrapped!
-    fileprivate var _state: StorableState!
+    fileprivate var _completeValue: CompleteValue<Wrapped>!
     fileprivate var _path: Path!
 }
 
@@ -54,11 +59,9 @@ private struct VariableBinding<Matcher, Variable>: AnyVariableBinding where Matc
     // TODO: Remove double functions when Swift generics work the way they are supposed to
     private func _write(_ value: CompleteValue<Variable>, for path: Path, to holder: inout Matcher) {
         let pathKeyPath: WritableKeyPath<Matcher, ImplicitlyUnwrappedOptional<Path>> = keyPath.appending(path: \Var<Variable>._path)
-        let stateKeyPath: WritableKeyPath<Matcher, ImplicitlyUnwrappedOptional<StorableState>> = keyPath.appending(path: \Var<Variable>._state)
-        let valueKeyPath: WritableKeyPath<Matcher, ImplicitlyUnwrappedOptional<Variable>> = keyPath.appending(path: \Var<Variable>._value)
+        let completeValueKeyPath: WritableKeyPath<Matcher, ImplicitlyUnwrappedOptional<CompleteValue<Variable>>> = keyPath.appending(path: \Var<Variable>._completeValue)
         holder[keyPath: pathKeyPath] = path
-        holder[keyPath: stateKeyPath] = value.state
-        holder[keyPath: valueKeyPath] = value.value
+        holder[keyPath: completeValueKeyPath] = value
     }
 
     public func write<T,U>(_ value: CompleteValue<U>, for path: Path, to holder: inout T) where T: Matchable {
