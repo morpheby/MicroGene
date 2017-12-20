@@ -14,6 +14,7 @@ public func globallyUniqueId() -> String {
 
 fileprivate var localIdCounter: Int = 0
 
+// FIXME: probably should add date+time to provide capability of overflow
 public func locallyUniqueId() -> String {
     localIdCounter += 1
     let lid = localIdCounter
